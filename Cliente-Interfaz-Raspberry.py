@@ -1,4 +1,3 @@
-
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
@@ -7,32 +6,30 @@ import threading
 import requests
 
 from lector import obtener_uid
-from lcd_display import show_message
+from lcd_display import show_multiline_text
 
-SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # ← HAY QUE CAMBIARLO
+SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # <-- CAMBIAR ESTO CUANDO SEPA LA IP DEL SERVIDOR!
 
 class AteneaClient(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="Atenea - Escaneja la targeta")
+        super().__init__(title="Client Atenea")
         self.set_border_width(10)
-        self.set_default_size(300, 200)
+        self.set_default_size(400, 300)
 
         # Layout principal
-        self.box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        self.add(self.box)
+        vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.add(vbox)
 
-        self.label = Gtk.Label(label="Escaneja la teva targeta...")
-        self.box.pack_start(self.label, True, True, 0)
+        # Info label
+        self.label = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
+        vbox.pack_start(self.label, False, False, 0)
 
-        self.name_label = Gtk.Label()
-        self.box.pack_start(self.name_label, True, True, 0)
+        # TextView per mostrar info del servidor
+        self.textview = Gtk.TextView()
+        self.textview.set_editable(False)
+        vbox.pack_start(self.textview, True, True, 0)
 
-        self.retry_button = Gtk.Button(label="Tornar a escanejar")
-        self.retry_button.connect("clicked", self.restart_scan)
-        self.retry_button.set_sensitive(False)
-        self.box.pack_start(self.retry_button, True, True, 0)
-
-        show_message("Escaneja la", "teva targeta...")
+        # Comença la lectura del UID
         self.start_uid_thread()
 
     def start_uid_thread(self):
@@ -41,40 +38,40 @@ class AteneaClient(Gtk.Window):
 
     def read_uid_loop(self):
         try:
-            uid = obtener_uid()  # ← UTILIZO LA LIBRERIA DE LEER UID (ÁLVARO)
+            uid = obtener_uid()
             GLib.idle_add(self.process_uid, uid)
         except Exception as e:
-            GLib.idle_add(self.show_error, f"Error llegint: {e}")
+            GLib.idle_add(self.display_message, f"Error llegint UID: {e}")
 
     def process_uid(self, uid):
-        self.label.set_text("Validant UID...")
-        show_message("Validant UID...")
+        self.label.set_text("Validant targeta en la base de dades...")
+        self.display_message("Validant targeta en la base de dades...")
 
         try:
             response = requests.post(SERVER_URL, json={"uid": uid})
             if response.status_code == 200:
+                # Si el UID es válido
                 name = response.json().get("name", "Desconegut")
-                self.name_label.set_text(f"Benvingut/da, {name}!")
-                show_message("Benvingut/da:", name)
+                self.label.set_text(f"Benvingut/da, {name}!")
+                self.display_message(f"Benvingut/da, {name}!")
             else:
-                self.show_error("UID no vàlid")
-        except:
-            self.show_error("Error de connexió")
+                # Si el UID no está en la base de datos
+                self.label.set_text("UID incorrecte. Torna-ho a intentar.")
+                self.display_message("UID incorrecte. Torna-ho a intentar.")
+        except Exception as e:
+            self.label.set_text("Error de connexió amb el servidor.")
+            self.display_message(f"Error de connexió: {str(e)}")
 
-        self.retry_button.set_sensitive(True)
+    def display_message(self, text):
+        show_multiline_text(text)
 
-    def show_error(self, message):
-        self.name_label.set_text(message)
-        show_message("Error:", message[:16])
+    def set_textview(self, text):
+        buffer = self.textview.get_buffer()
+        buffer.set_text(text)
 
-    def restart_scan(self, widget):
-        self.name_label.set_text("")
-        self.label.set_text("Escaneja la teva targeta...")
-        show_message("Escaneja la", "teva targeta...")
-        self.retry_button.set_sensitive(False)
-        self.start_uid_thread()
+if __name__ == "__main__":
+    win = AteneaClient()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
 
-win = AteneaClient()
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-Gtk.main()
