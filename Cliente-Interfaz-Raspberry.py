@@ -40,8 +40,7 @@ class AteneaClient(Gtk.Window):
         try:
             uid = obtener_uid()
             GLib.idle_add(self.process_uid, uid)
-        except Exception as e:
-            GLib.idle_add(self.display_message, f"Error llegint UID: {e}")
+       
 
     def process_uid(self, uid):
         self.label.set_text("Validant targeta en la base de dades...")
@@ -51,17 +50,24 @@ class AteneaClient(Gtk.Window):
             response = requests.post(SERVER_URL, json={"uid": uid})
             if response.status_code == 200:
                 # Si el UID es válido
-                name = response.json().get("name", "Desconegut")
+                name = response.json().get("name", "status")
                 self.label.set_text(f"Benvingut/da, {name}!")
                 self.display_message(f"Benvingut/da, {name}!")
+                # Llamamos a la función para mostrar el mensaje en la LCD
+                mostrar_lcd(name)
             else:
                 # Si el UID no está en la base de datos
                 self.label.set_text("UID incorrecte. Torna-ho a intentar.")
                 self.display_message("UID incorrecte. Torna-ho a intentar.")
-        except Exception as e:
-            self.label.set_text("Error de connexió amb el servidor.")
-            self.display_message(f"Error de connexió: {str(e)}")
-
+                
+      def mostrar_lcd(name):
+          lcd = lcddriver.lcd()
+          lcd.lcd_clear() 
+          message = f"Benvingut {name}"
+          lines = message.split("\n")
+          for i, line in enumerate(lines[:4]):
+          lcd.lcd_display_string(line[:20], i + 1)
+        
 
 if __name__ == "__main__":
     win = AteneaClient()
