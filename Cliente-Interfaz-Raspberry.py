@@ -6,7 +6,7 @@ import threading
 import requests
 
 from lector import obtener_uid
-from lcd_display import show_multiline_text
+
 
 SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # <-- CAMBIAR ESTO CUANDO SEPA LA IP DEL SERVIDOR!
 
@@ -62,12 +62,6 @@ class AteneaClient(Gtk.Window):
             self.label.set_text("Error de connexió amb el servidor.")
             self.display_message(f"Error de connexió: {str(e)}")
 
-    def display_message(self, text):
-        show_multiline_text(text)
-
-    def set_textview(self, text):
-        buffer = self.textview.get_buffer()
-        buffer.set_text(text)
 
 if __name__ == "__main__":
     win = AteneaClient()
