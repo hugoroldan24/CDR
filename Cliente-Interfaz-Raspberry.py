@@ -9,7 +9,7 @@ import requests
 from lector import obtener_uid
 from lcd_display import show_message
 
-SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # ← Canvia-ho
+SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # ← HAY QUE CAMBIARLO
 
 class AteneaClient(Gtk.Window):
     def __init__(self):
@@ -41,7 +41,7 @@ class AteneaClient(Gtk.Window):
 
     def read_uid_loop(self):
         try:
-            uid = obtener_uid()  # ← Aquí fas servir la teva llibreria
+            uid = obtener_uid()  # ← UTILIZO LA LIBRERIA DE LEER UID (ÁLVARO)
             GLib.idle_add(self.process_uid, uid)
         except Exception as e:
             GLib.idle_add(self.show_error, f"Error llegint: {e}")
