@@ -1,7 +1,7 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
-
+import requests #añadido para los requests al servidor
 import threading
 import requests
 import time
@@ -63,12 +63,12 @@ class AteneaClient(Gtk.Window):
 
         self.query_entry = Gtk.Entry()                                   #nos permite escribir aquello que ordenamos  
         self.query_entry.set_placeholder_text("Type your query:")         
-        self.query_entry.connect("activate", self.in_query)               #volvemos a conectar la señal activate al metodo in_query.
+        self.query_entry.connect("activate", self.on_query)               #volvemos a conectar la señal activate al metodo in_query.
         self.query_box.pack_start(self.query_entry, False, False, 0)
         
         
         self.logout_button = Gtk.Button(label="Logout")                   #ponemos un boton para deslogear
-        self.logout_button.connect("clicked", self.logout)               #conectamos la señal clicked al metodo logout
+        self.logout_button.connect("clicked", self.on_logout)               #conectamos la señal clicked al metodo logout
         self.query_box.pack_start(self.logout_button, False, False, 0)
 
         # Comença la lectura del UID
@@ -134,7 +134,33 @@ class AteneaClient(Gtk.Window):
         self.timer = None
         self.stack.set_visible_child_name("login")
         self.login_label.set_text("Please login with your university card")
+          
+      def on_query(self, widget):
+        queryname = self.query_entry.get_text().strip()                                      #referencia query_entry de la parte de la pantalla query
+        if queryname:
+            url = f"http://{self.server}:{self.port}/server.php/{self.uid}/{queryname}"        #creamos un url para enviar una request al server
+            threading.Thread(target=self.do_query, args=(url,)).start()                   #hilo para que no se pare la ui , importante
+        else:
+            self.update_welcome_label("No query found!", "red")
 
+      def do_query(self,url):
+            try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()  #lanza excepcion si estado no es 200
+            data= response.json();
+          
+            def handle_response():
+            if not data or not isinstance(data, list):                                          #isinstance pregunta si el objeto(data) es de tipo (list) que es nuestro unico formato en las bases de datos por lo que necesitamos que sea tipo list
+                self.update_welcome_label("No data found or invalid format!", "red")
+                return False                                                                    #para que GLib.idle_add no lo repita
+            self.create_table(data)
+            return False
+
+        GLib.idle_add(handle_response)
+
+    except requests.exceptions.RequestException as e:
+        GLib.idle_add(self.update_welcome_label, f"Connection error: {str(e)}", "red")
+           
 
 
 
