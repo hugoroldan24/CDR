@@ -162,7 +162,9 @@ class AteneaClient(Gtk.Window):
         GLib.idle_add(self.update_welcome_label, f"Connection error: {str(e)}", "red")
            
 
-
+        def create_table (self, json_array):
+            #acabar
+        
 
 
 if __name__ == "__main__":
