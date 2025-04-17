@@ -157,6 +157,8 @@ class LogIn {
          $response = [
             'status' => 'id_not_matched'
          ];
+         session_unset(); // Eliminar todas las variables de sesión
+         session_destroy();
       }
       return json_encode($response);
    }
