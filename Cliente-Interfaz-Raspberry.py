@@ -41,7 +41,7 @@ class AteneaClient(Gtk.Window):
 
         # Info label
         self.loginlabel = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
-        self.loginbox.pack_start(self.label, False, False, 0)
+        self.loginbox.pack_start(self.loginlabel, False, False, 0)
         
 
 
@@ -59,7 +59,7 @@ class AteneaClient(Gtk.Window):
         self.querybox.set_margin_end(10)
         
         self.welcomelabel = Gtk.Label(label="WELCOME")
-        self.querybox.pack_start(self.label, False, False, 0)
+        self.querybox.pack_start(self.welcomelabel, False, False, 0)
 
         self.query_entry = Gtk.Entry()                                   #nos permite escribir aquello que ordenamos  
         self.query_entry.set_placeholder_text("Type your query:")         
@@ -133,7 +133,7 @@ class AteneaClient(Gtk.Window):
         GLib.source_remove(self.timer)
         self.timer = None
         self.stack.set_visible_child_name("login")
-        self.login_label.set_text("Please login with your university card")
+        self.loginlabel.set_text("Please login with your university card")
           
       def on_query(self, widget):
         queryname = self.query_entry.get_text().strip()                                      #referencia query_entry de la parte de la pantalla query
@@ -141,7 +141,7 @@ class AteneaClient(Gtk.Window):
             url = f"http://{self.server}:{self.port}/server.php/{self.uid}/{queryname}"        #creamos un url para enviar una request al server
             threading.Thread(target=self.do_query, args=(url,)).start()                   #hilo para que no se pare la ui , importante
         else:
-            self.update_welcome_label("No query found!", "red")
+            self.update_welcome_label("No query found!", "red")     #hacer funcion
 
       def do_query(self,url):
             try:
@@ -164,7 +164,22 @@ class AteneaClient(Gtk.Window):
 
         def create_table (self, json_array):
             #acabar
-        
+            if not json_array
+                print("No data")
+            
+            if hasattr(self, "treeview"):           #si el objeto ya tenia una tabla anterior la elimina.
+                self.treeview.destroy()
+
+            keys = list(json_array[0].keys())
+            if not keys:
+                print("No keys found in data")
+                return
+
+          self.list = Gtk.ListStore(*[str] * len(keys))  #sirve para almacenar filas y columnas en un tree view, el * sirve para desempaquetar el numero de keys en strings (numero columnas).
+
+          for item in json_array                                            #recorremos cada diccionario 
+          fila= [str(item.get(key, "-")) for key in keys]                   #iteramos en su numero de claves
+          self.list.append(fila)                                            #añadimos  las filas
 
 
 if __name__ == "__main__":
