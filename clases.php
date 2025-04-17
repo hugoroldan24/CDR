@@ -43,8 +43,7 @@ class queryManager {
       $this->id = $id;
    }
    public function parseQuery() {
-      $query = parse_url($this->uri, PHP_URL_QUERY); // Ens quedem amb la query, el que ve despres de table?
-      parse_str($query, $this->query_array); // Parsejem la query i la guardem a un array
+      parse_str(parse_url($this->uri, PHP_URL_QUERY), $this->query_array); // Parsejem la query i la guardem a un array
    }
    public function obtainTable() {
       $this->table = str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH));
@@ -56,7 +55,7 @@ class queryManager {
             $operator = $this->convertOperator($query_data['operator']);
                  
             $date = ($query_data['value'] === 'now') ? date('Y-m-d') : $query_data['value'];
-            $this->sql_query = "SELECT day,subject,name FROM tasks WHERE (date $operator $date) AND (id = $this->id) ORDER BY date";  
+            $this->sql_query = "SELECT day,subject,name FROM tasks WHERE (date $operator $date) AND (uid = $this->id) ORDER BY date";  
             break;
             
          case 'marks':
@@ -72,7 +71,7 @@ class queryManager {
             
             $hour = ($query_hour['value'] === 'now') ? date('H') : $query_hour['value'];
             $day_week = ($query_day['value'] === 'now') ? date('N') : $this->ConvertDaytoNum($query_day['value']);
-            $this->sql_query = "SELECT day,hour,subject,room FROM timetables WHERE ((day_num > $day_week) OR (day_num = $day_week AND hour $hour_operator $hour) OR (day_num < $day_week)) AND id = $this->id ORDER BY ((day_num - $day_week)%5), hour";           
+            $this->sql_query = "SELECT day,hour,subject,room FROM timetables WHERE ((day_num > $day_week) OR (day_num = $day_week AND hour $hour_operator $hour) OR (day_num < $day_week)) AND uid = $this->id ORDER BY ((day_num - $day_week)%5), hour";           
             break;
             
          default:
