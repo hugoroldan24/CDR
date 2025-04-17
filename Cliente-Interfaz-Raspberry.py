@@ -5,6 +5,7 @@ import requests #añadido para los requests al servidor
 import threading
 import requests
 import time
+import lcddriver
 
 from lector import obtener_uid
 
