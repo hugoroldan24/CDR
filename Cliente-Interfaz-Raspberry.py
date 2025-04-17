@@ -173,15 +173,29 @@ class AteneaClient(Gtk.Window):
                 print("No keys found in data")
                 return
 
-          self.list = Gtk.ListStore(*[str] * len(keys))  #sirve para almacenar filas y columnas en un tree view, el * sirve para desempaquetar el numero de keys en strings (numero columnas).
+            self.list = Gtk.ListStore(*[str] * len(keys))  #sirve para almacenar filas y columnas en un tree view, el * sirve para desempaquetar el numero de keys en strings (numero columnas).
 
-          for item in json_array                                            #recorremos cada diccionario 
-          fila= [str(item.get(key, "-")) for key in keys]                   #iteramos en su numero de claves
-          self.list.append(fila)                                            #añadimos  las filas
+            for item in json_array                                               #recorremos cada diccionario 
+                fila= [str(item.get(key, "-")) for key in keys]                   #iteramos en su numero de claves
+                self.list.append(fila)                                            #añadimos  las filas
+
+              self.treeview = Gtk.TreeView(model=self.list)
+
+            for i, key in enumerate(keys):
+                renderer = Gtk.CellRendererText()
+                columna = Gtk.TreeViewColumn(key, renderer, text=i)
+                self.treeview.append_column(columna)
+
+             self.treeview.modify_font(Pango.FontDescription("Helvetica italic 12"))
+             self.treeview.get_header().modify_font(Pango.FontDescription("Helvetica bold 14"))
+
+             self.query_box.pack_start(self.treeview, True, True, 0)
+             self.query_box.show_all()
+
 
 
         def update_loginlabel(self, text, color="red"):
-            self.login_label.set_markup(f'<span foreground="{color}">{text}</span>')
+            self.loginlabel.set_markup(f'<span foreground="{color}">{text}</span>')
 
         def update_welcome_screen(self, name):
             self.welcomelabel.set_text(f"Benvingut/da, {name}!")
