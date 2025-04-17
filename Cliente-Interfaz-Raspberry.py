@@ -191,7 +191,7 @@ class AteneaClient(Gtk.Window):
 
 if __name__ == "__main__":
     win = AteneaClient()
-    win.connect("destroy", Gtk.main_quit)
+    #win.connect("destroy", Gtk.main_quit)
     win.show_all()
     Gtk.main()
 
