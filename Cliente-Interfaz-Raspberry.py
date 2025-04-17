@@ -180,7 +180,7 @@ class AteneaClient(Gtk.Window):
           self.list.append(fila)                                            #añadimos  las filas
 
 
-        def update_login_label(self, text, color="red"):
+        def update_loginlabel(self, text, color="red"):
             self.login_label.set_markup(f'<span foreground="{color}">{text}</span>')
 
         def update_welcome_screen(self, name):
