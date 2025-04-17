@@ -32,7 +32,7 @@ INSERT INFO tasks (uid, date, subject, name) VALUES
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','TD', 'Parcial'),(uid, '21-5-2025','FISE', 'Practica 4'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '21-5-2025','AST', 'Control Lab'),(uid, '21-5-2025','ICOM', 'Practica 2'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','EIM', 'Ejercicio 3'),(uid, '20-5-2025','PSAVC', 'Parcial'),
-(uid, '17-5-2025','PBE', 'Puzzle2')(uid, '17-5-2025','RP', 'Parcial'),(uid, '20-5-2025','TD', 'Parcial')
+(uid, '17-5-2025','PBE', 'Puzzle2')(uid, '17-5-2025','RP', 'Parcial'),(uid, '20-5-2025','TD', 'Parcial');
 
 CREATE TABLE timetables (
 
@@ -51,7 +51,7 @@ INSERT INFO timetables (uid, day, hour, subject, room, day_int) VALUES
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '10:00', 'TD', ''A3001, '3'),(uid, 'Monday', '18:00', 'FISE', 'A3002', '1'),
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '15:00', 'AST', 'A3002', '3'),(uid, 'Tuesday', '10:00', 'ICOM', 'A3002', '2'),
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '10:00', 'TD', 'A3001', '3'),(uid, 'Monday', '8:00', 'PSAVC', 'A3205', '1'),
-(uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Friday', '12:00', 'RP', 'A3205', '5'),(uid, 'Tuesday', '8:00', 'DSBM', 'A3205', '2'),
+(uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Friday', '12:00', 'RP', 'A3205', '5'),(uid, 'Tuesday', '8:00', 'DSBM', 'A3205', '2');
 
 CREATE TABLE marks (
 
