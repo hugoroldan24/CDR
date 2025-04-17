@@ -138,15 +138,13 @@ class queryManager {
 class LogIn {
 
    public $connexion;
-   public $id;
       
-   public function __construct($conn, $id) {
+   public function __construct($conn) {
       $this->connexion = $conn;
-      $this->id = $id;
    }
    
-   public function getUsername() {
-      $id_query = "SELECT name FROM users WHERE id = $this->id";
+   public function getUsername($id) {
+      $id_query = "SELECT name FROM users WHERE id = $id";
       $sql_row = $this->connexion->query($id_query);
       
       if ($sql_row->num_rows == 1) {
