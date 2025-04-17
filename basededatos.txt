@@ -12,7 +12,7 @@ name VARCHAR(40)
 
 INSERT INFO students (uid, name) VALUES
 
-(inser_tuid, Hugo), (inser_tuid, Pau), (inser_tuid, Marc), (inser_tuid, Cristóbal), (inser_tuid, Álvaro);
+(inser_tuid, Hugo), (inser_tuid, Pau), (inser_tuid, Marc), (inser_tuid, Cristóbal), (156F0588, Álvaro);
 
 
 CREATE TABLE tasks (
@@ -28,7 +28,7 @@ FOREIGN KEY (uid) REFERENCES students(uid)
 
 INSERT INFO tasks (uid, date, subject, name) VALUES 
 
-(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '17-5-2025','RP', 'Parcial'),(uid, '18-5-2025','DSBM', 'Informe P3'),
+(156F0588, '17-5-2025','PBE', 'Puzzle2'),(156F0588, '17-5-2025','RP', 'Parcial'),(156F0588, '18-5-2025','DSBM', 'Informe P3'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','TD', 'Parcial'),(uid, '21-5-2025','FISE', 'Practica 4'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '21-5-2025','AST', 'Control Lab'),(uid, '21-5-2025','ICOM', 'Practica 2'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','EIM', 'Ejercicio 3'),(uid, '20-5-2025','PSAVC', 'Parcial'),
@@ -45,7 +45,7 @@ room VARCHAR(20),
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
-INSERT INFO timetables (uid, day, hour, subject, room) VALUES
+INSERT INFO timetables (uid, day, hour, subject, room, day_int) VALUES
 
 CREATE TABLE marks (
 
@@ -59,7 +59,7 @@ FOREIGN KEY (uid) REFERENCES students(uid)
 
 INSERT INFO marks ( uid, subject, name, mark) VALUES
 
-(uid,'PBE', 'Puzzle1', 8),(uid,'RP', 'Parcial', 6),(uid,'PBE', 'Puzzle2', 5),
+(156F0588,'PBE', 'Puzzle1', 8),(156F0588,'RP', 'Parcial', 6),(156F0588,'PBE', 'Puzzle2', 5),
 (uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 7),
 (uid,'PBE', 'Puzzle1', 8),(uid,'DSBM', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 6),
 (uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 8),
