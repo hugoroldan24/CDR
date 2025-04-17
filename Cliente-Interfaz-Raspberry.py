@@ -62,12 +62,12 @@ class AteneaClient(Gtk.Window):
         self.query_entry = Gtk.Entry()                                   #nos permite escribir aquello que ordenamos  
         self.query_entry.set_placeholder_text("Type your query:")         
         self.query_entry.connect("activate", self.on_query)               #volvemos a conectar la señal activate al metodo in_query.
-        self.query_box.pack_start(self.query_entry, False, False, 0)
+        self.querybox.pack_start(self.query_entry, False, False, 0)
         
         
         self.logout_button = Gtk.Button(label="Logout")                   #ponemos un boton para deslogear
         self.logout_button.connect("clicked", self.on_logout)               #conectamos la señal clicked al metodo logout
-        self.query_box.pack_start(self.logout_button, False, False, 0)
+        self.querybox.pack_start(self.logout_button, False, False, 0)
 
         # Comença la lectura del UID
         self.start_uid_thread()
@@ -139,7 +139,7 @@ class AteneaClient(Gtk.Window):
             url = f"http://{self.server}:{self.port}/server.php/{self.uid}/{queryname}"        #creamos un url para enviar una request al server
             threading.Thread(target=self.do_query, args=(url,)).start()                   #hilo para que no se pare la ui , importante
         else:
-            self.update_welcome_label("No query found!", "red")     #hacer funcion
+            self.update_welcomelabel("No query found!", "red")     #hacer funcion
 
       def do_query(self,url):
             try:
@@ -147,17 +147,17 @@ class AteneaClient(Gtk.Window):
             response.raise_for_status()  #lanza excepcion si estado no es 200
             data= response.json();
           
-            def handle_response():
+            def handle_response():                                                              #(self,data) si estubisese fuera de la otra funcion
             if not data or not isinstance(data, list):                                          #isinstance pregunta si el objeto(data) es de tipo (list) que es nuestro unico formato en las bases de datos por lo que necesitamos que sea tipo list
-                self.update_welcome_label("No data found or invalid format!", "red")
-                return False                                                                    #para que GLib.idle_add no lo repita
+                self.update_welcomelabel("No data found or invalid format!", "red")
+                return                                                                    #para que GLib.idle_add no lo repita
             self.create_table(data)
-            return False
+          
 
-        GLib.idle_add(handle_response)
+        GLib.idle_add(self.handle_response,data)
 
     except requests.exceptions.RequestException as e:
-        GLib.idle_add(self.update_welcome_label, f"Connection error: {str(e)}", "red")
+        GLib.idle_add(self.update_welcomelabel, f"Connection error: {str(e)}", "red")
            
 
         def create_table (self, json_array):
