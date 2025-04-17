@@ -17,10 +17,7 @@ class AteneaClient(Gtk.Window):
         super().__init__(title="Client Atenea")
         self.server = #añadir IP server
         self.port = #añadir puerto
-        self.timer = None
-        self.inactivity_timeout = 60  #timeout de login para inactividad
-
-
+  
         
         #configuracion ventana
         self.set_border_width(10)
@@ -101,14 +98,17 @@ class AteneaClient(Gtk.Window):
             if response.status_code == 200:
                 # Si el UID es válido
                 name = response.json().get("name", "status")
-                self.label.set_text(f"Benvingut/da, {name}!")
                 self.display_message(f"Benvingut/da, {name}!")
+                self.update_welcome_screen(name)
                 # Llamamos a la función para mostrar el mensaje en la LCD
                 mostrar_lcd(name)
             else:
                 # Si el UID no está en la base de datos
-                self.label.set_text("UID incorrecte. Torna-ho a intentar.")
-                self.display_message("UID incorrecte. Torna-ho a intentar.")
+                self.update_loginlabel("User not found", "red")
+                    except requests.exceptions.RequestException as e:
+                self.update_loginlabel(f"Connection error: {str(e)}", "red")
+                    except ValueError:
+                self.update_login_label("Invalid server response", "red")
                 
       def mostrar_lcd(name):
           lcd = lcddriver.lcd()
@@ -124,10 +124,7 @@ class AteneaClient(Gtk.Window):
         print("Ventana cerrada. Saliendo de la aplicación.")
         Gtk.main_quit()
 
-      def on_timeout(self):                                          # hace log out y reinicia el timer
-        self.on_logout(None)
-        GLib.source_remove(self.timer)
-        self.timer = None
+      
 
 
       def on_logout(self, button):                                         #funcion log out, resetea timer, muestra el widjet hijo ventana log in
@@ -181,6 +178,15 @@ class AteneaClient(Gtk.Window):
           for item in json_array                                            #recorremos cada diccionario 
           fila= [str(item.get(key, "-")) for key in keys]                   #iteramos en su numero de claves
           self.list.append(fila)                                            #añadimos  las filas
+
+
+        def update_login_label(self, text, color="red"):
+            self.login_label.set_markup(f'<span foreground="{color}">{text}</span>')
+
+        def update_welcome_screen(self, name):
+            self.welcomelabel.set_text(f"Benvingut/da, {name}!")
+            self.stack.set_visible_child_name("query")
+           
 
 
 if __name__ == "__main__":
