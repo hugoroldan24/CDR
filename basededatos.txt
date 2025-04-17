@@ -1,0 +1,77 @@
+sudo apt install mysql-server, 
+sudo apt install php,
+
+entrar consola sql : MySQL -u root -p
+crear base de datos: CREATE DATABASE nom_de_la_base;
+entrar en a la base de dato: USE nom_de_la_base;
+
+CREATE TABLE students (
+uid INT PRIMARY KEY,
+name VARCHAR(40)
+);
+
+INSERT INFO students (uid, name) VALUES
+
+(inser_tuid, Hugo), (inser_tuid, Pau), (inser_tuid, Marc), (inser_tuid, Cristóbal), (inser_tuid, Álvaro);
+
+
+CREATE TABLE tasks (
+
+id INT AUTO_INCREMENT PRIMARY KEY,
+uid INT,
+date DATE,
+subject VARCHAR(40),
+name VARCHAR(40),
+//PRIMARY KEY (uid, subject, name),
+FOREIGN KEY (uid) REFERENCES students(uid)
+);
+
+INSERT INFO tasks (uid, date, subject, name) VALUES 
+
+(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '17-5-2025','RP', 'Parcial'),(uid, '18-5-2025','DSBM', 'Informe P3'),
+(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','TD', 'Parcial'),(uid, '21-5-2025','FISE', 'Practica 4'),
+(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '21-5-2025','AST', 'Control Lab'),(uid, '21-5-2025','ICOM', 'Practica 2'),
+(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','EIM', 'Ejercicio 3'),(uid, '20-5-2025','PSAVC', 'Parcial'),
+(uid, '17-5-2025','PBE', 'Puzzle2')(uid, '17-5-2025','RP', 'Parcial'),(uid, '20-5-2025','TD', 'Parcial')
+
+CREATE TABLE timetables (
+
+id INT AUTO_INCREMENT PRIMARY KEY,
+uid INT,
+day VARCHAR(20),
+hour TIME,
+subject VARCHAR(40),
+room VARCHAR(20),
+FOREIGN KEY (uid) REFERENCES students(uid)
+);
+
+INSERT INFO timetables (uid, day, hour, subject, room) VALUES
+
+CREATE TABLE marks (
+
+id INT AUTO_INCREMENT PRIMARY KEY,
+uid INT,
+subject VARCHAR(40),
+name VARCHAR(40),
+mark DECIMAL(4,2)
+FOREIGN KEY (uid) REFERENCES students(uid)
+);
+
+INSERT INFO marks ( uid, subject, name, mark) VALUES
+
+(uid,'PBE', 'Puzzle1', 8),(uid,'RP', 'Parcial', 6),(uid,'PBE', 'Puzzle2', 5),
+(uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 7),
+(uid,'PBE', 'Puzzle1', 8),(uid,'DSBM', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 6),
+(uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 8),
+(uid,'PBE', 'Puzzle1', 9),(uid,'DSBM', 'Parcial', 8),(uid,'PBE', 'Puzzle2', 7);
+
+
+
+
+
+
+
+
+
+
+
