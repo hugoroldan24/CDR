@@ -10,7 +10,7 @@ uid INT PRIMARY KEY,
 name VARCHAR(40)
 );
 
-INSERT INFO students (uid, name) VALUES
+INSERT INTO students (uid, name) VALUES
 
 (inser_tuid, Hugo), (inser_tuid, Pau), (inser_tuid, Marc), (inser_tuid, Cristóbal), (156F0588, Álvaro);
 
@@ -26,13 +26,13 @@ name VARCHAR(40),
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
-INSERT INFO tasks (uid, date, subject, name) VALUES 
+INSERT INTO tasks (uid, date, subject, name) VALUES 
 
 (156F0588, '17-5-2025','PBE', 'Puzzle2'),(156F0588, '17-5-2025','RP', 'Parcial'),(156F0588, '18-5-2025','DSBM', 'Informe P3'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','TD', 'Parcial'),(uid, '21-5-2025','FISE', 'Practica 4'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '21-5-2025','AST', 'Control Lab'),(uid, '21-5-2025','ICOM', 'Practica 2'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','EIM', 'Ejercicio 3'),(uid, '20-5-2025','PSAVC', 'Parcial'),
-(uid, '17-5-2025','PBE', 'Puzzle2')(uid, '17-5-2025','RP', 'Parcial'),(uid, '20-5-2025','TD', 'Parcial');
+(uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '17-5-2025','RP', 'Parcial'),(uid, '20-5-2025','TD', 'Parcial');
 
 CREATE TABLE timetables (
 
@@ -45,7 +45,7 @@ room VARCHAR(20),
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
-INSERT INFO timetables (uid, day, hour, subject, room, day_int) VALUES
+INSERT INTO timetables (uid, day, hour, subject, room, day_int) VALUES
 
 (156F0588, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(156F0588, 'Friday', '12:00', 'RP', 'A3205', '5'),(156F0588, 'Tuesday', '8:00', 'DSBM', 'A3205', '2'),
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '10:00', 'TD', 'A3001', '3'),(uid, 'Monday', '18:00', 'FISE', 'A3002', '1'),
@@ -59,11 +59,11 @@ id INT AUTO_INCREMENT PRIMARY KEY,
 uid INT,
 subject VARCHAR(40),
 name VARCHAR(40),
-mark DECIMAL(4,2)
+mark DECIMAL(4,2),
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
-INSERT INFO marks ( uid, subject, name, mark) VALUES
+INSERT INTO marks ( uid, subject, name, mark) VALUES
 
 (156F0588,'PBE', 'Puzzle1', 8),(156F0588,'RP', 'Parcial', 6),(156F0588,'PBE', 'Puzzle2', 5),
 (uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 7),
