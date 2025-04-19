@@ -1,6 +1,5 @@
 <?php
 
-
 class connexionDB {
 
    public $connexion;
@@ -43,7 +42,7 @@ class queryManager {
       $this->id = $id;
    }
    public function parseQuery() {
-      parse_str(parse_url($this->uri, PHP_URL_QUERY), $this->query_array); // Parsejem la query i la guardem a un array
+      parse_str(parse_url($this->uri, PHP_URL_QUERY), $this->query_array); // Parsear la query y guardarla en un array
    }
    public function obtainTable() {
       $this->table = str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH));
@@ -86,7 +85,7 @@ class queryManager {
    public function ConvertQuerySQLtoClient() {
       $row_vector = [];
       if ($this->status == "valid_query") {
-         while ($row = $this->sql_rows->fetch_assoc()) { // Anem iterant per les files i les guardem a un vector
+         while ($row = $this->sql_rows->fetch_assoc()) { // Iterar por las filas y guardarlas en un vector
             $row_vector[] = $row;
          }
       }
@@ -165,17 +164,21 @@ class LogIn {
 }
 
 function CheckInactivityTimer(){
-    
-        $time_inactive = time() - $_SESSION['last_activity'];
-        if ($time_inactive > TIMEOUT_DURATION) {
-            session_unset(); // Eliminar todas las variables de sesión
-            session_destroy(); // Destruir la sesión
-            die("Sesión expirada. Por favor, vuelve a iniciar sesión.");
-         }
-        //Si no se cumple la condición, modificamos la variable de sesion al instante actual para reiniciar el contador
-        $_SESSION['last_activity'] = time();
-}
+    if (!isset($_SESSION['last_activity'])) {
+        $_SESSION['last_activity'] = time(); // Inicializar si no está definido
+    }
 
-?>
+    $time_inactive = time() - $_SESSION['last_activity'];
+    $timeout_duration = 300; // Definir el tiempo de inactividad permitido
+
+    if ($time_inactive > $timeout_duration) {
+        session_unset(); // Eliminar todas las variables de sesión
+        session_destroy(); // Destruir la sesión
+        die("Sesión expirada. Por favor, vuelve a iniciar sesión.");
+    }
+
+    // Si no se cumple la condición, reiniciar el temporizador
+    $_SESSION['last_activity'] = time();
+}
 
 ?>
