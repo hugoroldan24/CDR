@@ -197,6 +197,9 @@ class AteneaClient(Gtk.Window):
         def update_loginlabel(self, text, color="red"):
             self.loginlabel.set_markup(f'<span foreground="{color}">{text}</span>')
 
+         def update_welcomelabel(self, text, color="red"):
+            self.welcomelabel.set_markup(f'<span foreground="{color}">{text}</span>')
+
         def update_welcome_screen(self, name):
             self.welcomelabel.set_text(f"Benvingut/da, {name}!")
             self.stack.set_visible_child_name("query")
