@@ -6,6 +6,7 @@ import threading
 import requests
 import time
 import lcddriver
+import json
 
 from lector import obtener_uid
 
