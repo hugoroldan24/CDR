@@ -129,8 +129,8 @@ class AteneaClient(Gtk.Window):
 
 
       def on_logout(self, button):                                         #funcion log out, resetea timer, muestra el widjet hijo ventana log in
-        GLib.source_remove(self.timer)
-        self.timer = None
+        #Lib.source_remove(self.timer)
+        #self.timer = None
         self.stack.set_visible_child_name("login")
         self.loginlabel.set_text("Please login with your university card")
           
@@ -140,7 +140,7 @@ class AteneaClient(Gtk.Window):
             url = f"http://{self.server}:{self.port}/server.php/{self.uid}/{queryname}"        #creamos un url para enviar una request al server
             threading.Thread(target=self.do_query, args=(url,)).start()                   #hilo para que no se pare la ui , importante
         else:
-            self.update_welcomelabel("No query found!", "red")     #hacer funcion
+            self.update_welcomelabel("No query found!", "red")     
 
       def do_query(self,url):
             try:
