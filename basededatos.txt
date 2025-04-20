@@ -42,6 +42,7 @@ day VARCHAR(20),
 hour TIME,
 subject VARCHAR(40),
 room VARCHAR(20),
+day_int INT,
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
