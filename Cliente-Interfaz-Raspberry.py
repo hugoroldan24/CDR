@@ -109,7 +109,7 @@ class AteneaClient(Gtk.Window):
                     except requests.exceptions.RequestException as e:
                 self.update_loginlabel(f"Connection error: {str(e)}", "red")
                     except ValueError:
-                self.update_login_label("Invalid server response", "red")
+                self.update_loginlabel("Invalid server response", "red")
                 
       def mostrar_lcd(name):
           lcd = lcddriver.lcd()
@@ -189,8 +189,8 @@ class AteneaClient(Gtk.Window):
              self.treeview.modify_font(Pango.FontDescription("Helvetica italic 12"))
              self.treeview.get_header().modify_font(Pango.FontDescription("Helvetica bold 14"))
 
-             self.query_box.pack_start(self.treeview, True, True, 0)
-             self.query_box.show_all()
+             self.querybox.pack_start(self.treeview, True, True, 0)
+             self.querybox.show_all()
 
 
 
