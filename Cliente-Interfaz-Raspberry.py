@@ -153,12 +153,11 @@ class AteneaClient(Gtk.Window):
                 self.update_welcomelabel("No data found or invalid format!", "red")
                 return                                                                    #para que GLib.idle_add no lo repita
             self.create_table(data)
+            GLib.idle_add(self.handle_response,data)
           
 
-        GLib.idle_add(self.handle_response,data)
-
-    except requests.exceptions.RequestException as e:
-        GLib.idle_add(self.update_welcomelabel, f"Connection error: {str(e)}", "red")
+            except requests.exceptions.RequestException as e:
+                GLib.idle_add(self.update_welcomelabel, f"Connection error: {str(e)}", "red")
            
 
         def create_table (self, json_array):
