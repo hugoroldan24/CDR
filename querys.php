@@ -26,7 +26,7 @@
    CheckInactivityTimer();
 
    // Recuperar la conexión desde la sesión
-   $data_base_link = $_SESSION['connexion_db'];
+   $data_base_link = $_SESSION['connexion_db'];  
 
    // Crear una instancia de queryManager
    $query_manager = new queryManager($data_base_link, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
