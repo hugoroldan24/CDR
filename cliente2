@@ -4,7 +4,7 @@ from gi.repository import Gtk, GLib, Pango
 import requests  # Añadido para los requests al servidor
 import threading
 import time
-import lcddriver
+# import lcddriver
 import json
 
 from lector import obtener_uid
@@ -83,7 +83,7 @@ class AteneaClient(Gtk.Window):
             if response.status_code == 200:
                 name = response.json().get("name", "Unknown")
                 self.update_welcome_screen(name)
-                self.mostrar_lcd(name)
+                # self.mostrar_lcd(name)
             else:
                 self.update_loginlabel("User not found", "red")
         except requests.exceptions.RequestException as e:
@@ -91,13 +91,13 @@ class AteneaClient(Gtk.Window):
         except ValueError:
             self.update_loginlabel("Invalid server response", "red")
 
-    def mostrar_lcd(self, name):
-        lcd = lcddriver.lcd()
-        lcd.lcd_clear()
-        message = f"Benvingut {name}"
-        lines = message.split("\n")
-        for i, line in enumerate(lines[:4]):
-            lcd.lcd_display_string(line[:20], i + 1)
+    # def mostrar_lcd(self, name):
+     #   lcd = lcddriver.lcd()
+     #    lcd.lcd_clear()
+    #    message = f"Benvingut {name}"
+     #   lines = message.split("\n")
+    #    for i, line in enumerate(lines[:4]):
+     #       lcd.lcd_display_string(line[:20], i + 1)
 
     def on_destroy(self, widget):
         print("Ventana cerrada. Saliendo de la aplicación.")
