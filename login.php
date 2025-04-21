@@ -1,5 +1,5 @@
 <?php   
-   include("classes.php");  
+   include("clases.php");  
    session_start();
 
    // Validar si el parámetro 'id' está presente en la URL
