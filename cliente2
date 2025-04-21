@@ -15,8 +15,8 @@ SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # <-- CAMBIAR ESTO CUANDO SEPA 
 class AteneaClient(Gtk.Window):
     def __init__(self):
         super().__init__(title="Client Atenea")
-        self.server = "127.0.0.1"  # Cambiar por la IP del servidor
-        self.port = 8080  # Cambiar por el puerto del servidor
+        self.server = "192.168.1.49"  # Cambiar por la IP del servidor
+        self.port = "8000"  # Cambiar por el puerto del servidor
 
         # Configuración ventana
         self.set_border_width(10)
