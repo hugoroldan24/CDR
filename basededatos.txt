@@ -6,29 +6,28 @@ crear base de datos: CREATE DATABASE nom_de_la_base;
 entrar en a la base de dato: USE nom_de_la_base;
 
 CREATE TABLE students (
-uid INT PRIMARY KEY,
+uid VARCHAR(20) PRIMARY KEY,
 name VARCHAR(40)
 );
 
 INSERT INTO students (uid, name) VALUES
 
-(inser_tuid, Hugo), (inser_tuid, Pau), (inser_tuid, Marc), (76C91605, Cristóbal), (156F0588, Álvaro);
+(inser_tuid, 'Hugo'), (inser_tuid, Pau), (inser_tuid, Marc), (76C91605, Cristóbal), (156F0588, Álvaro);
 
 
 CREATE TABLE tasks (
 
 id INT AUTO_INCREMENT PRIMARY KEY,
-uid INT,
+uid VARCHAR(20),
 date DATE,
 subject VARCHAR(40),
 name VARCHAR(40),
-//PRIMARY KEY (uid, subject, name),
 FOREIGN KEY (uid) REFERENCES students(uid)
 );
 
 INSERT INTO tasks (uid, date, subject, name) VALUES 
 
-(156F0588, '17-5-2025','PBE', 'Puzzle2'),(156F0588, '17-5-2025','RP', 'Parcial'),(156F0588, '18-5-2025','DSBM', 'Informe P3'),
+('156F0588', '2025-05-17','PBE', 'Puzzle2'),('156F0588', '2025-05-19','RP', 'Parcial'),('156F0588', '2025-05-18','DSBM', 'Informe P3'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '20-5-2025','TD', 'Parcial'),(uid, '21-5-2025','FISE', 'Practica 4'),
 (uid, '17-5-2025','PBE', 'Puzzle2'),(uid, '21-5-2025','AST', 'Control Lab'),(uid, '21-5-2025','ICOM', 'Practica 2'),
 (76C91605, '17-5-2025','PBE', 'Puzzle2'),(76C91605, '20-5-2025','EIM', 'Ejercicio 3'),(76C91605, '20-5-2025','PSAVC', 'Parcial'),
@@ -37,7 +36,7 @@ INSERT INTO tasks (uid, date, subject, name) VALUES
 CREATE TABLE timetables (
 
 id INT AUTO_INCREMENT PRIMARY KEY,
-uid INT,
+uid VARCHAR(20),
 day VARCHAR(20),
 hour TIME,
 subject VARCHAR(40),
@@ -48,7 +47,7 @@ FOREIGN KEY (uid) REFERENCES students(uid)
 
 INSERT INTO timetables (uid, day, hour, subject, room, day_int) VALUES
 
-(156F0588, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(156F0588, 'Friday', '12:00', 'RP', 'A3205', '5'),(156F0588, 'Tuesday', '8:00', 'DSBM', 'A3205', '2'),
+('156F0588', 'Thursday', '14:00', 'PBE', 'A3205', '4'),('156F0588', 'Friday', '12:00', 'RP', 'A3205', '5'),('156F0588', 'Tuesday', '8:00', 'DSBM', 'A3205', '2'),
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '10:00', 'TD', 'A3001', '3'),(uid, 'Monday', '18:00', 'FISE', 'A3002', '1'),
 (uid, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(uid, 'Wednesday', '15:00', 'AST', 'A3002', '3'),(uid, 'Tuesday', '10:00', 'ICOM', 'A3002', '2'),
 (76C91605, 'Thursday', '14:00', 'PBE', 'A3205', '4'),(76C91605, 'Wednesday', '10:00', 'TD', 'A3001', '3'),(76C91605, 'Monday', '8:00', 'PSAVC', 'A3205', '1'),
@@ -57,7 +56,7 @@ INSERT INTO timetables (uid, day, hour, subject, room, day_int) VALUES
 CREATE TABLE marks (
 
 id INT AUTO_INCREMENT PRIMARY KEY,
-uid INT,
+uid VARCHAR(20),
 subject VARCHAR(40),
 name VARCHAR(40),
 mark DECIMAL(4,2),
@@ -66,7 +65,7 @@ FOREIGN KEY (uid) REFERENCES students(uid)
 
 INSERT INTO marks ( uid, subject, name, mark) VALUES
 
-(156F0588,'PBE', 'Puzzle1', 8),(156F0588,'RP', 'Parcial', 6),(156F0588,'PBE', 'Puzzle2', 5),
+('156F0588','PBE', 'Puzzle1', 8),('156F0588','RP', 'Parcial', 6),('156F0588','PBE', 'Puzzle2', 5),
 (uid,'PBE', 'Puzzle1', 7),(uid,'RP', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 7),
 (uid,'PBE', 'Puzzle1', 8),(uid,'DSBM', 'Parcial', 7),(uid,'PBE', 'Puzzle2', 6),
 (76C91605,'PBE', 'Puzzle1', 7),(76C91605,'RP', 'Parcial', 7),(76C91605,'PBE', 'Puzzle2', 8),
