@@ -1,5 +1,7 @@
 <?php
 
+define('TIMEOUT_DURATION',300);// Definir el tiempo de inactividad permitido
+
 class connexionDB {
 
    public $connexion;
@@ -169,9 +171,8 @@ function CheckInactivityTimer(){
     }
 
     $time_inactive = time() - $_SESSION['last_activity'];
-    $timeout_duration = 300; // Definir el tiempo de inactividad permitido
 
-    if ($time_inactive > $timeout_duration) {
+    if ($time_inactive > TIMEOUT_DURATION) {
         session_unset(); // Eliminar todas las variables de sesión
         session_destroy(); // Destruir la sesión
         die("Sesión expirada. Por favor, vuelve a iniciar sesión.");
