@@ -1,5 +1,5 @@
 <?php
-   include("classes.php");
+   include("clases.php");
    session_start();
 
    // Verificar si la sesión contiene los datos necesarios
