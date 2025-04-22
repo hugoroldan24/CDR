@@ -119,7 +119,7 @@ class LogIn {
    }
    
    public function getUsername($id) {
-      $id_query = "SELECT name FROM students WHERE id = $id";
+      $id_query = "SELECT name FROM students WHERE uid = $id";
       $sql_row = $this->connexion->query($id_query);
       
       if ($sql_row->num_rows == 1) {
