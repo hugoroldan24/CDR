@@ -8,13 +8,13 @@
        die("ID de usuario no proporcionado.");
    }                                                        
    $user_id = $_GET['id'];
-   $connexion = new mysqli('192.168.1.49','Afrodita','alvaro','afrodita);   
-   if ($connexion->connect_error) {
-         die("Connexió fallida " . $connexion->connect_error);
-   }   
+
+   include("connexion.php");   
+
    $login = new LogIn($_SESSION['connexion_db']);   
    $_SESSION['user_id'] = $user_id;
-   $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad       
+   $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad 
+
    echo($login->getUsername($_SESSION['user_id']));                                              						           
    
 
