@@ -8,7 +8,7 @@
    }
 
    // Sanitizar el parámetro 'id' para mayor seguridad
-                                                         //$user_id = intval($_GET['id']); // Convertir a entero para evitar inyecciones SQL
+                                                        
    $user_id = $_GET['id'];
    $data_base_link = new connexionDB('192.168.1.49', 'Afrodita', 'alvaro', 'afrodita');
    $login = new LogIn($data_base_link);
