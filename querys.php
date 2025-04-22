@@ -14,7 +14,7 @@
    $data_base_link = $_SESSION['connexion_db'];  
 
    // Crear una instancia de queryManager
-   $query_manager = new queryManager($data_base_link, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
+   $query_manager = new queryManager($data_base_link->connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
 
    // Ejecutar las operaciones necesarias
    $query_manager->obtainTable();
