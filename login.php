@@ -20,6 +20,6 @@
    $_SESSION['user_id'] = $user_id;
    $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad       
    echo($login->getUsername($_SESSION['user_id']));                                              						           
-   $connexion->close();
+   
 
 ?>
