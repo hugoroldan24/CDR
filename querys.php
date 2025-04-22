@@ -10,8 +10,7 @@
    // Verificar inactividad
    CheckInactivityTimer();
 
-   // Recuperar la conexión desde la sesión
-   $connexion = $_SESSION['connexion_db'];  
+  include("connexion.php")
 
    // Crear una instancia de queryManager
    $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
