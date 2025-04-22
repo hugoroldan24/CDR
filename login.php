@@ -10,10 +10,10 @@
    // Sanitizar el parámetro 'id' para mayor seguridad
                                                         
    $user_id = $_GET['id'];
-   $data_base_link = new connexionDB('192.168.1.49', 'Afrodita', 'alvaro', 'afrodita');
-   $login = new LogIn($data_base_link->connexion);
+   $connexion = new mysqli('192.168.1.49','Afrodita','alvaro','afrodita);
+   $login = new LogIn($connexion);
    
-   $_SESSION['connexion_db'] = $data_base_link->connexion;
+   $_SESSION['connexion_db'] = $connexion;
    $_SESSION['user_id'] = $user_id;
    $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad
    
