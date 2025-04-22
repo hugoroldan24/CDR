@@ -2,31 +2,6 @@
 
 define('TIMEOUT_DURATION',300);// Definir el tiempo de inactividad permitido
 
-class connexionDB {
-
-   public $connexion;
-   public $host;
-   public $dbname;
-   public $username;
-   public $password;
-   
-   public function __construct($host, $dbname, $username, $password) {
-      $this->host = $host;
-      $this->dbname = $dbname;
-      $this->username = $username;
-      $this->password = $password;
-   } 
-   public function connect() {
-      $this->connexion = new mysqli($this->host, $this->username, $this->password, $this->dbname);
-      if ($this->connexion->connect_error) {
-         die("Connexió fallida " . $this->connexion->connect_error);
-      }	
-   }
-   public function disconnect() {
-      $this->connexion->close();
-   }
-}
-
 class queryManager {
 
    public $connexion; 
