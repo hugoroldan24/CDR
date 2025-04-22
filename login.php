@@ -1,3 +1,4 @@
+
 <?php   
    include("clases.php");  
    session_start();
@@ -10,20 +11,15 @@
    // Sanitizar el parámetro 'id' para mayor seguridad
                                                         
    $user_id = $_GET['id'];
-   $connexion = new mysqli('192.168.1.49','Afrodita','alvaro','afrodita);
+   $connexion = new mysqli('192.168.1.49','Afrodita','alvaro','afrodita);   
    if ($connexion->connect_error) {
          die("Connexió fallida " . $connexion->connect_error);
-   }	
-   $login = new LogIn($connexion);
-   
+   }   
+   $login = new LogIn($connexion);   
    $_SESSION['connexion_db'] = $connexion;
    $_SESSION['user_id'] = $user_id;
-   $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad
-   
-   $data_base_link->connect(); 
-       
-   echo($login->getUsername($_SESSION['user_id'])); 
-                                                						           
-   $data_base_link->disconnect();
+   $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad       
+   echo($login->getUsername($_SESSION['user_id']));                                              						           
+   $connexion->close();
 
 ?>
