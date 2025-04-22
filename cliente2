@@ -79,7 +79,7 @@ class AteneaClient(Gtk.Window):
     def process_uid(self, uid):
         self.loginlabel.set_text("Validando tarjeta en la base de datos...")
         try:
-            response = requests.post(SERVER_URL, json={"uid": uid})
+           url = f"http://{self.server}:{self.port}/server.php/students?uid={uid}"
             if response.status_code == 200:
                 name = response.json().get("name", "Unknown")
                 self.update_welcome_screen(name)
