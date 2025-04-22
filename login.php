@@ -9,13 +9,14 @@
    }                                                        
    $user_id = $_GET['id'];
 
-   include("connexion.php");   
+   include("connexion.php");   //Importamos la conexión
 
    $login = new LogIn($_SESSION['connexion_db']);   
    $_SESSION['user_id'] = $user_id;
    $_SESSION['last_activity'] = time(); // Iniciar el temporizador de inactividad 
 
    echo($login->getUsername($_SESSION['user_id']));                                              						           
-   
 
+   $connexion->close();
+   
 ?>
