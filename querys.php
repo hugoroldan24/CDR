@@ -10,7 +10,7 @@
    // Verificar inactividad
    CheckInactivityTimer();
 
-   include("connexion.php")
+   include("connect.php")
 
    // Crear una instancia de queryManager
    $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
