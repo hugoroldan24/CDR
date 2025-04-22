@@ -9,7 +9,7 @@
    }                                                        
    $user_id = $_GET['id'];
 
-   include("connexion.php");   //Importamos la conexión
+   include("connect.php");   //Importamos la conexión
 
    $login = new LogIn($connexion);   
    $_SESSION['user_id'] = $user_id;
