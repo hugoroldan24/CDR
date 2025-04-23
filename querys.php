@@ -1,8 +1,8 @@
 <?php
+   session_start();
    include("clases.php");
    include("connect.php");
 
-   session_start();
 
    // Verificar si la sesión contiene los datos necesarios
    if (!isset($_SESSION['connexion']) || !isset($_SESSION['user_id'])) {
