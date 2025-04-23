@@ -22,7 +22,7 @@ class queryManager {
       parse_str(parse_url($this->uri, PHP_URL_QUERY), $this->query_array); // Parsear la query y guardarla en un array
    }
    public function obtainTable() {
-      $this->table = str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH));
+      $this->table = str_replace('Servidor/querys.php/', '', parse_url($this->uri, PHP_URL_PATH));
    }
    public function ConvertQuerytoSQL() {
       switch ($this->table) {
