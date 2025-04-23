@@ -1,16 +1,17 @@
 <?php
    include("clases.php");
+   include("connect.php");
+
    session_start();
 
    // Verificar si la sesión contiene los datos necesarios
-   if (!isset($_SESSION['connexion_db']) || !isset($_SESSION['user_id'])) {
+   if (!isset($_SESSION['connexion']) || !isset($_SESSION['user_id'])) {
        die("Error: Sesión no inicializada correctamente.");
    }
 
    // Verificar inactividad
    CheckInactivityTimer();
 
-   include("connect.php");
 
    // Crear una instancia de queryManager
    $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
