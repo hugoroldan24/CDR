@@ -1,27 +1,35 @@
 <?php
-   session_start();
-   include("clases.php");
-   include("connect.php");
+include("clases.php");
+include("connect.php");
 
+#if (isset($_GET['sid'])) {
+ #   session_id($_GET['sid']);
+#}
 
-   // Verificar si la sesión contiene los datos necesarios
-   if (!isset($_SESSION['connexion']) || !isset($_SESSION['user_id'])) {
-       die("Error: Sesión no inicializada correctamente.");
-   }
+session_start();
 
-   // Verificar inactividad
-   CheckInactivityTimer();
+// Primero verificar inactividad
+CheckInactivityTimer();
 
+// Luego verificar sesión
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    die(json_encode(['status' => 'error', 'message' => 'Sesión no válida o expirada.']));
+}
 
-   // Crear una instancia de queryManager
-   $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']); 
+try {
+    $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']);
 
-   // Ejecutar las operaciones necesarias
-   $query_manager->obtainTable();
-   $query_manager->parseQuery();
- 
-   $query_manager->ConvertQuerytoSQL();  
-   echo($query_manager->ConvertQuerySQLtoClient());   
+    $query_manager->obtainTable();
+    $query_manager->parseQuery();
+    $query_manager->ConvertQuerytoSQL();
 
-   $connexion->close();
+    header('Content-Type: application/json');
+    echo $query_manager->ConvertQuerySQLtoClient();
+} catch (Exception $e) {
+    http_response_code(500);
+    die(json_encode(['status' => 'error', 'message' => 'Error en el servidor: ' . $e->getMessage()]));
+}
+
+$connexion->close();
 ?>
