@@ -29,7 +29,7 @@ class queryManager {
     }
     //Función que te separa la query en todas sus constraints y extrae de ella todos los elementos para realizar una consulta SQL
     
-    public function parse_query(){
+    public function ParseQuery(){
        $i = 0;
        $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula       
        $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints
@@ -46,6 +46,7 @@ class queryManager {
     }
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
     public function ConvertQuerytoSQL() {
+        $add_limit = false;
         $query_sql = "SELECT * FROM {$this->table} WHERE ";
         //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
@@ -53,8 +54,21 @@ class queryManager {
         $val = $this->valores;
     
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
-            $where = "({$params[i]} {$op[ 
-            
+            if($i > 0){
+                $query_sql .=" AND ";
+            }
+            if($params[$i] === "limit"){
+                $add_limit = true;
+                $num_limit = $val[i];
+            }
+            $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
+            $query_sql .=$where
+        }
+        $query_sql .=" AND (uid = {$this->id})";  //Esto se pone en todos los casos para consultar las tablas propias del usuario.    
+
+        if($add_limit){
+            $query_sql .= " {$num_limit}; 
+        }
 
 
 
@@ -160,8 +174,8 @@ class queryManager {
             case 'gt': return '>';
             case 'lte': return '<=';
             case 'lt': return '<';
-            case '=' return '=';
-            default: return ''; //Per exemple si la constraint es limit = 1 , entrariem en aquesta opció, per tant al vector de operands es guardaria com ''.
+            default return '='; //Per exemple si la constraint es limit = 1 , entrariem en aquesta opció, per tant al vector de operands es guardaria com '=' el qual és util alhora de construir la petició SQL
+            
         }     
     }
 }
