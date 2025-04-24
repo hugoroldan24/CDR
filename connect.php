@@ -11,6 +11,6 @@ try {
 } catch (Exception $e) {
     error_log("Database connection error: " . $e->getMessage());
     http_response_code(500);
-    die(json_encode(['status' => 'error', 'message' => 'Error de conexiÃ³n con la base de datos']));
+    die(json_encode(['status' => 'error', 'message' => 'Error de conexion con la base de datos']));
 }
 ?>
