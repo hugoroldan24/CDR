@@ -4,7 +4,7 @@ from gi.repository import Gtk, GLib, Pango
 import requests  # Añadido para los requests al servidor
 import threading
 import time
-# import lcddriver
+import lcddriver
 import json
 
 from lector import obtener_uid
@@ -76,28 +76,46 @@ class AteneaClient(Gtk.Window):
             uid = obtener_uid()
             GLib.idle_add(self.process_uid, uid)
 
-    def process_uid(self, uid):
-        self.loginlabel.set_text("Validando tarjeta en la base de datos...")
-        try:
-           url = f"http://{self.server}:{self.port}/server.php/students?uid={uid}"
-            if response.status_code == 200:
-                name = response.json().get("name", "Unknown")
-                self.update_welcome_screen(name)
-                # self.mostrar_lcd(name)
-            else:
-                self.update_loginlabel("User not found", "red")
-        except requests.exceptions.RequestException as e:
-            self.update_loginlabel(f"Connection error: {str(e)}", "red")
-        except ValueError:
-            self.update_loginlabel("Invalid server response", "red")
+   def process_uid(self, uid):
+    # Actualización inicial segura
+    GLib.idle_add(self.loginlabel.set_text, "Validando tarjeta en la base de datos...")
+    print("Validando")
+    
+    try:
+        url = f"http://{self.server}:{self.port}/login.php?id={uid}"
+        response = requests.get(url, timeout=5)
+        print("Validado")
+        
+        print(f"STATUS CODE RECIBIDO: {response.status_code}")
+        
+        if response.status_code == 200:
+            print("uee")
+            print(response.text)
+            
+            try:
+                data = response.json()
+                name = data.get("name", "Desconocido")
+                GLib.idle_add(self.update_welcome_screen, name)
+                # GLib.idle_add(self.mostrar_lcd, name)  # Si lo necesitas
+            except ValueError:
+                print("invalido")
+                GLib.idle_add(self._safe_update_label, "Respuesta inválida del servidor","red")
+        else:
+            print("noo")
+            GLib.idle_add(self._safe_update_label,"Usuario no encontrado","red")
+            
+    except requests.exceptions.RequestException as e:
+        print("error conexion")
+        GLib.idle_add(self._safe_update_label,f"Error de conexión: {str(e)}","red")
+        return
 
-    # def mostrar_lcd(self, name):
-     #   lcd = lcddriver.lcd()
-     #    lcd.lcd_clear()
-    #    message = f"Benvingut {name}"
-     #   lines = message.split("\n")
-    #    for i, line in enumerate(lines[:4]):
-     #       lcd.lcd_display_string(line[:20], i + 1)
+     def mostrar_lcd(self, name):
+       lcd = lcddriver.lcd()
+       lcd.lcd_clear()
+       message = f"Benvingut {name}"
+       lines = message.split("\n")
+       for i, line in enumerate(lines[:4]):
+           lcd.lcd_display_string(line[:20], i + 1)
 
     def on_destroy(self, widget):
         print("Ventana cerrada. Saliendo de la aplicación.")
@@ -157,6 +175,15 @@ class AteneaClient(Gtk.Window):
     def update_welcome_screen(self, name):
         self.welcomelabel.set_text(f"Benvingut/da, {name}!")
         self.stack.set_visible_child_name("query")
+
+    def _safe_update_label(self, text, color="black"):
+    try:
+        if hasattr(self, 'loginlabel') and self.loginlabel:
+            # Escapar caracteres especiales para markup
+            safe_text = str(text).replace('&', '&amp;').replace('<', '&lt;')
+            self.loginlabel.set_markup(f'<span color="{color}">{safe_text}</span>')
+    except Exception as e:
+        print(f"Error al actualizar label: {e}")
 
 
 if __name__ == "__main__":
