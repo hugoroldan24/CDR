@@ -6,11 +6,7 @@ import threading
 import time
 import lcddriver
 import json
-
 from lector import obtener_uid
-
-SERVER_URL = "http://IP_DEL_SERVIDOR:PORT/auth"  # <-- CAMBIAR ESTO CUANDO SEPA LA IP DEL SERVIDOR!
-
 
 class AteneaClient(Gtk.Window):
     def __init__(self):
