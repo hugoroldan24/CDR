@@ -1,3 +1,4 @@
+sudo apt install mysql-server
 sudo apt install mariadb-server
 sudo apt install php,
 
