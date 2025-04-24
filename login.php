@@ -20,10 +20,10 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 $user_id = trim($_GET['id']);
-if ($user_id === false) {
+/*if ($user_id === false) {
     http_response_code(400);
     die(json_encode(['status' => 'error', 'message' => 'ID de usuario no válido.']));
-}
+}*/
 
 include("connect.php");
 
