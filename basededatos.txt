@@ -7,7 +7,7 @@ CREATE USER 'alvaro'@'localhost' IDENTIFIED BY '';
 GRANT ALL PRIVILEGES ON Afrodita.* TO 'alvaro'@'localhost';
 FLUSH PRIVILEGES;
 
-entrar en a la base de dato: USE Afrodita;
+entrar en a la base de datos: USE Afrodita;
 
 CREATE TABLE students (
 uid VARCHAR(20) PRIMARY KEY,
