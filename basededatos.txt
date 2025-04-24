@@ -74,14 +74,3 @@ INSERT INTO marks ( uid, subject, name, mark) VALUES
 ('00000002','PBE', 'Puzzle1', 8),('00000002','DSBM', 'Parcial', 7),('00000002','PBE', 'Puzzle2', 6),
 ('76C91605','PBE', 'Puzzle1', 7),('76C91605','RP', 'Parcial', 7),('76C91605','PBE', 'Puzzle2', 8),
 ('00000001','PBE', 'Puzzle1', 9),('00000001','DSBM', 'Parcial', 8),('00000001','PBE', 'Puzzle2', 7);
-
-
-
-
-
-
-
-
-
-
-
