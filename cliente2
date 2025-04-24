@@ -11,7 +11,7 @@ from lector import obtener_uid
 class AteneaClient(Gtk.Window):
     def __init__(self):
         super().__init__(title="Client Atenea")
-        self.server = "192.168.1.49"  # Cambiar por la IP del servidor
+        self.server = "localhost"  # Cambiar por la IP del servidor
         self.port = "8000"  # Cambiar por el puerto del servidor
 
         # Configuración ventana
