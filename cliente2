@@ -85,7 +85,6 @@ class AteneaClient(Gtk.Window):
         print(f"STATUS CODE RECIBIDO: {response.status_code}")
         
         if response.status_code == 200:
-            print("uee")
             print(response.text)
             
             try:
@@ -97,11 +96,10 @@ class AteneaClient(Gtk.Window):
                 print("invalido")
                 GLib.idle_add(self._safe_update_label, "Respuesta inválida del servidor","red")
         else:
-            print("noo")
             GLib.idle_add(self._safe_update_label,"Usuario no encontrado","red")
             
     except requests.exceptions.RequestException as e:
-        print("error conexion")
+        
         GLib.idle_add(self._safe_update_label,f"Error de conexión: {str(e)}","red")
         return
 
