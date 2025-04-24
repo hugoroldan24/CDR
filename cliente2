@@ -110,7 +110,7 @@ class AteneaClient(Gtk.Window):
     def on_query(self, widget):
         queryname = self.query_entry.get_text().strip()
         if queryname:
-            url = f"http://{self.server}:{self.port}/server.php/{queryname}"
+            url = f"http://{self.server}:{self.port}/querys.php/{queryname}"
             threading.Thread(target=self.do_query, args=(url,)).start()
         else:
             self.update_welcomelabel("No query found!", "red")
