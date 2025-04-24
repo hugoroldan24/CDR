@@ -1,9 +1,13 @@
-sudo apt install mysql-server, 
+sudo apt install mariadb-server
 sudo apt install php,
 
-entrar consola sql : MySQL -u root -p
-crear base de datos: CREATE DATABASE nom_de_la_base;
-entrar en a la base de dato: USE nom_de_la_base;
+sudo mariadb
+CREATE DATABASE Afrodita;
+CREATE USER 'alvaro'@'localhost' IDENTIFIED BY '';
+GRANT ALL PRIVILEGES ON Afrodita.* TO 'alvaro'@'localhost';
+FLUSH PRIVILEGES;
+
+entrar en a la base de dato: USE Afrodita;
 
 CREATE TABLE students (
 uid VARCHAR(20) PRIMARY KEY,
