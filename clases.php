@@ -38,9 +38,9 @@ class queryManager {
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
            $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
-           $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));    //Obtenim l'operand 
-           $this->params[$i] = $exploded_data_operand[0];                                   //Obtenim el paràmetre (date,hour...)
-           $this->valores[$i] = $exploded_query[0];                                         //Obtenim el valor (now,8:00)
+           $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
+           $this->params[$i] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
+           $this->valores[$i] = modifyValue($this->params[i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
            $i++;
        }
     }
@@ -177,6 +177,26 @@ class queryManager {
             default return '='; //Per exemple si la constraint es limit = 1 , entrariem en aquesta opció, per tant al vector de operands es guardaria com '=' el qual és util alhora de construir la petició SQL
             
         }     
+    }
+    //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
+    //però si el paràmetre es day, el converteix a int de totes maneres.
+    public function modifyValue($param,$value){
+        if($value == 'now'){
+            switch($param){
+                case 'date': return date('Y-m-d');
+                case 'hour':  return date('H');
+                case 'day': return date('N');
+                case 'month': return date('m');
+                case 'year': return date('Y');
+                default:  die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
+            }              
+        }
+        else{
+            if($param == 'day'){
+                return  ConvertDaytoNum($value);
+            }
+            return $value;
+        }
     }
 }
 
