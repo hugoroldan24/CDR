@@ -27,7 +27,8 @@ class queryManager {
         $this->valores = [];
         $this->params = [];
     }
-    //Función que te separa la query en todas sus constraints y extrae de ella todos los elementos para realizar una consulta SQL
+    // Funció que separa la query en totes les seves restriccions i en extreu els elements necessaris per fer una consulta SQL. Aquests elements se li aplicaran les funcions corresponents per deixarles en format
+    // per introduir directament a una consulta SQL.
     
     public function ParseQuery(){
        $i = 0;
@@ -47,27 +48,29 @@ class queryManager {
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
     public function ConvertQuerytoSQL() {
         $add_limit = false;
-        $query_sql = "SELECT * FROM {$this->table} WHERE ";
+        $query_sql = "SELECT * FROM {$this->table} WHERE "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
         //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
         $params = $this->params;
         $val = $this->valores;
     
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
-            if($i > 0){
-                $query_sql .=" AND ";
-            }
-            if($params[$i] === "limit"){
+            if($params[$i] == "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
                 $add_limit = true;
-                $num_limit = $val[i];
+                $num_limit = $val[i]; //Ens guardem el valor del limit 
             }
-            $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
-            $query_sql .=$where
+            else{
+                if($i > 0){ //Si no es la primera constraint a colocar en el WHERE, afegim un AND
+                    $query_sql .=" AND ";
+                }           
+                $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
+                $query_sql .= $where
+            }
         }
         $query_sql .=" AND (uid = {$this->id})";  //Esto se pone en todos los casos para consultar las tablas propias del usuario.    
 
         if($add_limit){
-            $query_sql .= " {$num_limit}; 
+            $query_sql .= "LIMIT {$num_limit}; 
         }
 
 
@@ -155,7 +158,8 @@ class queryManager {
             case 'Tue': return 2;
             case 'Wed': return 3;
             case 'Thu': return 4;
-            default: return 5;   
+            case 'Fri': return 5;   
+            default: die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
         }
     }
     
@@ -174,8 +178,7 @@ class queryManager {
             case 'gt': return '>';
             case 'lte': return '<=';
             case 'lt': return '<';
-            default return '='; //Per exemple si la constraint es limit = 1 , entrariem en aquesta opció, per tant al vector de operands es guardaria com '=' el qual és util alhora de construir la petició SQL
-            
+            default return '=';         
         }     
     }
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
