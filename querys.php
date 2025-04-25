@@ -2,7 +2,8 @@
 
 session_start();
 include("clases.php");
-include("connect.php")
+include("connect.php"); #añadir codigo improtyante
+
 
 #if (isset($_GET['sid'])) {
  #   session_id($_GET['sid']);
