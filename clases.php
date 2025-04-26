@@ -30,9 +30,11 @@ class queryManager {
     // Funció que separa la query en totes les seves restriccions i en extreu els elements necessaris per fer una consulta SQL. Aquests elements se li aplicaran les funcions corresponents per deixarles en format
     // per introduir directament a una consulta SQL.
     
-    public function ParseQuery(){
+    public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
+
        $i = 0;
-       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula       
+       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
+       //Aquí quedaria eliminar el PHP_URL_QUERY
        $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints. Si no hay constraints, devolverá ""
        $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
        foreach($total_constraints as $constraint){
