@@ -33,7 +33,7 @@ class queryManager {
     public function ParseQuery(){
        $i = 0;
        $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula       
-       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints
+       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints. Si no hay constraints, devolverá ""
        $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
        foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
@@ -48,7 +48,7 @@ class queryManager {
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
     public function ConvertQuerytoSQL() {
         $add_limit = false;
-        $query_sql = "SELECT * FROM {$this->table} WHERE "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
+        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) AND "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
         //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
         $params = $this->params;
@@ -60,19 +60,22 @@ class queryManager {
                 $num_limit = $val[i]; //Ens guardem el valor del limit 
             }
             else{
-                if($i > 0){ //Si no es la primera constraint a colocar en el WHERE, afegim un AND
-                    $query_sql .=" AND ";
-                }           
-                $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
-                $query_sql .= $where
+                if($this->table == 'timetables'){
+                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour $op[i+1] $val[i+1] THEN 5 ELSE @ciclo, hour //Se pone el i + 1 porque al hacer la query de timetables, se pone algo como: timetables?day=Fri&hour[gt]=08:00, por tanto la parte de la hora corresponde a la segunda constraint.
+                }
+                else{
+                    $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
+                    $query_sql .= $where 
+                }
             }
         }
-        $query_sql .=" AND (uid = {$this->id})";  //Esto se pone en todos los casos para consultar las tablas propias del usuario.    
+          
 
         if($add_limit){
             $query_sql .= "LIMIT {$num_limit}; 
         }
-
+        //Para ordenar ciclicamente la timetables: ORDER BY @ciclo := (day_num - {$day_param} + 5)%5, CASE WHEN (@ciclo = 0) AND hour < {$hour_param} THEN 5 ELSE @ciclo, hour    
+        //Básicamente lo que hace esa linea es, si el dia es el actual, pero la hora de la clase ya ha pasado, se le asigna un 5, por tanto se colocará el último. Luego ordenamos por hora normal 
 
 
 
@@ -184,7 +187,7 @@ class queryManager {
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
     //però si el paràmetre es day, el converteix a int de totes maneres.
     public function modifyValue($param,$value){
-        if($value == 'now'){
+        if($value == 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
             switch($param){
                 case 'date': return date('Y-m-d');
                 case 'hour':  return date('H');
