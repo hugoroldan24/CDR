@@ -1,16 +1,14 @@
 import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango
-
 import threading
 import time
-import urllib.request
-import json
-
-from lector import obtener_uid
 import lcddriver
+import json
+from librerias import puzzle_1
 
-# Clase para encapsular el hilo de lectura de UID
+# Clase para encapsular el thread de lectura de UID
+
 class UIDReaderThread(threading.Thread):
     def __init__(self, callback):
         super().__init__(daemon=True)
