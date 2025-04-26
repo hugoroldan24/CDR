@@ -53,90 +53,40 @@ class queryManager {
         $op = $this->operandos;
         $params = $this->params;
         $val = $this->valores;
-    
+        
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
             if($params[$i] == "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
                 $add_limit = true;
                 $num_limit = $val[i]; //Ens guardem el valor del limit 
             }
             else{
-                if($this->table == 'timetables'){
-                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour $op[i+1] $val[i+1] THEN 5 ELSE @ciclo, hour //Se pone el i + 1 porque al hacer la query de timetables, se pone algo como: timetables?day=Fri&hour[gt]=08:00, por tanto la parte de la hora corresponde a la segunda constraint.
+                if($this->table != 'timetables'){ //Si la taula a consultar es timetables, les constraints s'utilitzen al ORDER BY no al WHERE
+                    $query_sql .= "({$params[$i]} {$op[$i]} {$val[$i]})";
+                    if($i < $num_constraints -1){ //Si estem a la ultima iteració, no posem el AND
+                        $query_sql .= " AND ";
+                    }
+                    else{ //Aquí habría que añadir el ORDER BY de las otras tablas, ya que estaras em la última iteración
+                        
+                    }
                 }
-                else{
-                    $where = "({$params[$i]} {$op[$i]} {$val[$i]})";    
-                    $query_sql .= $where 
+                else{  //Si la tabla es timetables, colocamos directamente el ORDER BY y salimos del ciclo for. Aqui se asume que las constraints para la consulta de timetables unicamente tiene 2 constraints, dia y hora
+                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour $op[i+1] $val[i+1] THEN 5 ELSE @ciclo, hour"
                 }
-            }
+            }                                               
         }
-          
-
         if($add_limit){
-            $query_sql .= "LIMIT {$num_limit}; 
+            $query_sql .= "LIMIT {$num_limit}";
         }
-        //Para ordenar ciclicamente la timetables: ORDER BY @ciclo := (day_num - {$day_param} + 5)%5, CASE WHEN (@ciclo = 0) AND hour < {$hour_param} THEN 5 ELSE @ciclo, hour    
-        //Básicamente lo que hace esa linea es, si el dia es el actual, pero la hora de la clase ya ha pasado, se le asigna un 5, por tanto se colocará el último. Luego ordenamos por hora normal 
-
-
-
         
-        switch ($this->table) {
-            case 'tasks':
-                if (!isset($this->query_array['date'])) {
-                    $this->status = "invalid_parameters";
-                    return;
-                }
-                
-                $query_data = $this->getOperatorAndValue($this->query_array['date']);
-                $operator = $this->convertOperator($query_data['operator']);
-                     
-                $date = ($query_data['value'] === 'now') ? date('Y-m-d') : $this->connexion->real_escape_string($query_data['value']);
-                
-                $stmt = $this->connexion->prepare("SELECT day, subject, name FROM tasks WHERE (date $operator ?) AND (uid = ?) ORDER BY date");
-                $stmt->bind_param("si", $date, $this->id);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            case 'marks':
-                $stmt = $this->connexion->prepare("SELECT subject, name, mark FROM marks WHERE id = ? ORDER BY subject");
-                $stmt->bind_param("i", $this->id);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            case 'timetables':
-                if (!isset($this->query_array['day']) || !isset($this->query_array['hour'])) {
-                    $this->status = "invalid_parameters";
-                    return;
-                }
-                
-                $query_day = $this->getOperatorAndValue($this->query_array['day']);
-                $query_hour = $this->getOperatorAndValue($this->query_array['hour']);
-                
-                $day_operator = $this->convertOperator($query_day['operator']);
-                $hour_operator = $this->convertOperator($query_hour['operator']);
-                
-                $hour = ($query_hour['value'] === 'now') ? date('H') : $this->connexion->real_escape_string($query_hour['value']);
-                $day_week = ($query_day['value'] === 'now') ? date('N') : $this->ConvertDaytoNum($query_day['value']);
-                
-                $sql = "SELECT day, hour, subject, room FROM timetables WHERE ((day_num > ?) OR (day_num = ? AND hour $hour_operator ?) OR (day_num < ?)) AND uid = ? ORDER BY ((day_num - ?)%5), hour";
-                $stmt = $this->connexion->prepare($sql);
-                $stmt->bind_param("iiiii", $day_week, $day_week, $hour, $day_week, $this->id, $day_week);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            default:
-                $this->status = "not_valid_query";
-                break;
-        }
+       $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
         
         if ($this->sql_rows === false) {
             $this->status = "query_error";
             $this->error = $this->connexion->error;
-        }
+        }    
     }
+        //Para ordenar ciclicamente la timetables: ORDER BY @ciclo := (day_num - {$day_param} + 5)%5, CASE WHEN (@ciclo = 0) AND hour < {$hour_param} THEN 5 ELSE @ciclo, hour    
+        //Básicamente lo que hace esa linea es, si el dia es el actual, pero la hora de la clase ya ha pasado, se le asigna un 5, por tanto se colocará el último. Luego ordenamos por hora normal 
     
     public function ConvertQuerySQLtoClient() {
         $row_vector = [];
@@ -149,8 +99,8 @@ class queryManager {
             'status' => $this->status,
             'data' => $row_vector
         ];
-        if ($this->status == "query_error") {
-            $response['error'] = $this->error;
+        if ($this->status == "query_error") { // ?
+            $response['error'] = $this->error; 
         }
         return json_encode($response);
     }
