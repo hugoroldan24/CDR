@@ -43,14 +43,14 @@ class queryManager {
 
            $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
            $this->params[$i] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
-           $this->valores[$i] = modifyValue($this->params[i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
+           $this->valores[$i] = modifyValue($this->params[$i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
            $i++;
        }
     }
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
     public function ConvertQuerytoSQL() {
         $add_limit = false;
-        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) AND "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
+        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
         //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
         $params = $this->params;
@@ -59,25 +59,30 @@ class queryManager {
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
             if($params[$i] == "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
                 $add_limit = true;
-                $num_limit = $val[i]; //Ens guardem el valor del limit 
+                $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
             }
             else{
                 if($this->table != 'timetables'){ //Si la taula a consultar es timetables, les constraints s'utilitzen al ORDER BY no al WHERE
-                    $query_sql .= "({$params[$i]} {$op[$i]} {$val[$i]})";
-                    if($i < $num_constraints -1){ //Si estem a la ultima iteració, no posem el AND
-                        $query_sql .= " AND ";
-                    }
-                    else{ //Aquí habría que añadir el ORDER BY de las otras tablas, ya que estaras em la última iteración
-                        
+                    $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
+                    if($i == $num_constraints-1){ //Aquí habría que añadir el ORDER BY de las otras tablas, ya que estaras em la última iteración
+                        if($this->table == 'marks'){
+                            $query_sql .= " ORDER BY mark";
+                        }
+                        else if ($this->table == 'tasks'){
+                            $query_sql .= " ORDER BY date";
+                        }
+                        else{
+                             die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
+                        }
                     }
                 }
                 else{  //Si la tabla es timetables, colocamos directamente el ORDER BY y salimos del ciclo for. Aqui se asume que las constraints para la consulta de timetables unicamente tiene 2 constraints, dia y hora
-                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour $op[i+1] $val[i+1] THEN 5 ELSE @ciclo, hour"
+                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[$i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[$i+1]} {$val[$i+1]} THEN 5 ELSE @ciclo, hour ";
                 }
             }                                               
         }
         if($add_limit){
-            $query_sql .= "LIMIT {$num_limit}";
+            $query_sql .= " LIMIT {$num_limit}";
         }
         
        $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
