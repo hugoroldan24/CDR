@@ -34,7 +34,11 @@ class queryManager {
 
        $i = 0;
        $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
-       //Aquí quedaria eliminar el PHP_URL_QUERY
+       //OJO al hacer el parse url, si no hay query, (no hay nada despues del ?, parse_url devolverá false
+      if(parse_url($this->uri, PHP_URL_QUERY) === false){
+         $this->num_constraints = 0;   //Si devuelve false querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
+      }
+      else{
        $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints. Si no hay constraints, devolverá ""
        $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
        foreach($total_constraints as $constraint){
@@ -46,8 +50,10 @@ class queryManager {
            $this->valores[$i] = modifyValue($this->params[$i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
            $i++;
        }
+     }
     }
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
+    //Como lo tenemos ahora, si el order by se pone dentro del for, este no se pondrá para el caso de no poner ninguna query, (marks?), por tanto el order by se tiene que poner fuera del bucle
     public function ConvertQuerytoSQL() {
         $add_limit = false;
         $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
@@ -79,6 +85,7 @@ class queryManager {
                 }
                 else{  //Si la tabla es timetables, colocamos directamente el ORDER BY y salimos del ciclo for. Aqui se asume que las constraints para la consulta de timetables unicamente tiene 2 constraints, dia y hora
                     $query_sql .=" ORDER BY @ciclo := (day_num - {$params[$i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[$i+1]} {$val[$i+1]} THEN 5 ELSE @ciclo, hour ";
+                     exit;
                 }
             }                                               
         }
