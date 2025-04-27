@@ -25,7 +25,7 @@ $_SESSION['connexion'] = true;
 $_SESSION['last_activity'] = time();
 
 header('Content-Type: application/json');
-echo $login->getUsername($user_id);
+echo ($login->getUsername($user_id));
 
 $connexion->close();
 ?>
