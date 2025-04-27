@@ -1,8 +1,9 @@
 #login.php
 
 <?php
-include("clases.php");
 session_start();
+include("clases.php");
+
 
 // Configuración segura de cookies de sesión
 #session_set_cookie_params([
