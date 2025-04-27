@@ -131,9 +131,12 @@ class AteneaClient(Gtk.Window):
 
     # Cuando se envía una consulta
     def on_query(self, widget):
-        queryname = self.query_entry.get_text().strip()
+        tablename = self.query_entry.get_text().strip()
+        //Aquí podemos añadir un switch y en funcion de la tabla que escriba, completar la query nosotros. Lo de query = no funcionará, hay que añadir 
+        switch(tablename){
+        }
         if queryname:
-            url = f"http://{self.server}:{self.port}/queries.php?query={queryname}"
+            url = f"http://{self.server}:{self.port}/queries.php/{tablename}?{constraints}"
             threading.Thread(target=self.do_query, args=(url,), daemon=True).start()
         else:
             self.update_welcomelabel("No query found!", "red")
