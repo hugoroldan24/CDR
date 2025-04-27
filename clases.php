@@ -1,6 +1,6 @@
 <?php
 define('TIMEOUT_DURATION', 300); // Definir el tiempo de inactividad permitido
-
+//VIGILAR EL CASO DONDE NO HAYA QUERY , COMO POR EJEMPLO EN MARKS? . PORQUE SE ASIGNARÁ VACIO A LOS VECTORES DE LOS PARÁMETROS DE LAS QUERYS Y ESO PUEDE DAR PROBLEMAS EN EL FOR DE PROCESS QUERY
 class queryManager {
     public $connexion; 
     public $uri;
