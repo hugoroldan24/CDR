@@ -5,22 +5,13 @@ session_start();
 include("clases.php");
 
 
-// Configuración segura de cookies de sesión
-#session_set_cookie_params([
- #   'lifetime' => 3600,
- #   'path' => '/',
- #   'secure' => true,
- #   'httponly' => true,
- #   'samesite' => 'Strict'
-#]);
-
 // Validar y sanitizar el ID
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     http_response_code(400);
     die(json_encode(['status' => 'error', 'message' => 'ID de usuario no proporcionado.']));
 }
 
-$user_id = trim($_GET['id']);
+$user_id = $_GET['id'];
 /*if ($user_id === false) {
     http_response_code(400);
     die(json_encode(['status' => 'error', 'message' => 'ID de usuario no válido.']));
