@@ -39,7 +39,7 @@ class queryManager {
          $this->num_constraints = 0;   //Si devuelve false querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
       }
       else{
-       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints. Si no hay constraints, devolverá ""
+       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints.
        $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
        foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
@@ -224,7 +224,7 @@ function CheckInactivityTimer() {
 __________________________________________________________________________
 <?php
 define('TIMEOUT_DURATION', 300); // Definir el tiempo de inactividad permitido
-
+//VIGILAR EL CASO DONDE NO HAYA QUERY , COMO POR EJEMPLO EN MARKS? . PORQUE SE ASIGNARÁ VACIO A LOS VECTORES DE LOS PARÁMETROS DE LAS QUERYS Y ESO PUEDE DAR PROBLEMAS EN EL FOR DE PROCESS QUERY
 class queryManager {
     public $connexion; 
     public $uri;
@@ -235,9 +235,11 @@ class queryManager {
     public $query_array;
     public $error;
     public $sql_query;
+    
     public $operandos;
     public $valores;
     public $params;
+    public $num_constraints;
   
     public function __construct($conn, $uri, $id) {
         $this->status = "valid_query";
@@ -249,82 +251,79 @@ class queryManager {
         $this->valores = [];
         $this->params = [];
     }
-    //Función que te separa la query en todas sus constraints y extrae de ella todos los elementos para realizar una consulta SQL
+    // Funció que separa la query en totes les seves restriccions i en extreu els elements necessaris per fer una consulta SQL. Aquests elements se li aplicaran les funcions corresponents per deixarles en format
+    // per introduir directament a una consulta SQL.
     
-    public function parse_query(){
+    public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
+
        $i = 0;
-       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula       
-       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints
-       
+       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
+       //OJO al hacer el parse url, si no hay query, (no hay nada despues del ?, parse_url devolverá false
+      if(parse_url($this->uri, PHP_URL_QUERY) === false){
+         $this->num_constraints = 0;   //Si devuelve false querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
+      }
+      else{
+       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints.
+       $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
        foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
            $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
-           $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));    //Obtenim l'operand 
-           $this->params[$i] = $exploded_data_operand[0];                                   //Obtenim el paràmetre (date,hour...)
-           $this->valores[$i] = $exploded_query[0];                                         //Obtenim el valor (now,8:00)
+           $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
+           $this->params[$i] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
+           $this->valores[$i] = modifyValue($this->params[$i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
            $i++;
        }
+     }
     }
-    
+    //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
+    //Como lo tenemos ahora, si el order by se pone dentro del for, este no se pondrá para el caso de no poner ninguna query, (marks?), por tanto el order by se tiene que poner fuera del bucle
     public function ConvertQuerytoSQL() {
-        switch ($this->table) {
-            case 'tasks':
-                if (!isset($this->query_array['date'])) {
-                    $this->status = "invalid_parameters";
-                    return;
-                }
-                
-                $query_data = $this->getOperatorAndValue($this->query_array['date']);
-                $operator = $this->convertOperator($query_data['operator']);
-                     
-                $date = ($query_data['value'] === 'now') ? date('Y-m-d') : $this->connexion->real_escape_string($query_data['value']);
-                
-                $stmt = $this->connexion->prepare("SELECT day, subject, name FROM tasks WHERE (date $operator ?) AND (uid = ?) ORDER BY date");
-                $stmt->bind_param("si", $date, $this->id);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            case 'marks':
-                $stmt = $this->connexion->prepare("SELECT subject, name, mark FROM marks WHERE id = ? ORDER BY subject");
-                $stmt->bind_param("i", $this->id);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            case 'timetables':
-                if (!isset($this->query_array['day']) || !isset($this->query_array['hour'])) {
-                    $this->status = "invalid_parameters";
-                    return;
-                }
-                
-                $query_day = $this->getOperatorAndValue($this->query_array['day']);
-                $query_hour = $this->getOperatorAndValue($this->query_array['hour']);
-                
-                $day_operator = $this->convertOperator($query_day['operator']);
-                $hour_operator = $this->convertOperator($query_hour['operator']);
-                
-                $hour = ($query_hour['value'] === 'now') ? date('H') : $this->connexion->real_escape_string($query_hour['value']);
-                $day_week = ($query_day['value'] === 'now') ? date('N') : $this->ConvertDaytoNum($query_day['value']);
-                
-                $sql = "SELECT day, hour, subject, room FROM timetables WHERE ((day_num > ?) OR (day_num = ? AND hour $hour_operator ?) OR (day_num < ?)) AND uid = ? ORDER BY ((day_num - ?)%5), hour";
-                $stmt = $this->connexion->prepare($sql);
-                $stmt->bind_param("iiiii", $day_week, $day_week, $hour, $day_week, $this->id, $day_week);
-                $stmt->execute();
-                $this->sql_rows = $stmt->get_result();
-                break;
-                
-            default:
-                $this->status = "not_valid_query";
-                break;
+        $add_limit = false;
+        $is_timetable = false;
+        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
+        //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
+        $op = $this->operandos;
+        $params = $this->params;
+        $val = $this->valores;
+        
+        for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
+            if($params[$i] === "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
+                $add_limit = true;
+                $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
+            }
+            elseif($this->table != 'timetables'){
+                $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
+            }
+            else{
+                $is_timetable = true; //Aquí no nos interesa salir del bucle for por si tuvieramos una constraint limit.  
+            }                                               
+        } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
+        if($is_timetable){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
+           $query_sql .=" ORDER BY @ciclo := (day_num - {$params[0]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[1]} {$val[1]} THEN 5 ELSE @ciclo, hour ";
         }
+        elseif($this->table === 'marks'){
+           $query_sql .=" ORDER BY mark ";
+        }
+        elseif($this->table === 'tasks'){
+           $query_sql .=" ORDER BY date ";
+        }
+        else{
+           die(json_encode(['status' => 'error', 'message' => 'Invalid table']));
+        }            
+        if($add_limit){ //Al final de todo añadimos el LIMIT si se ha especificado en la constraint
+            $query_sql .= " LIMIT {$num_limit}";
+        }
+       
+       $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
         
         if ($this->sql_rows === false) {
             $this->status = "query_error";
             $this->error = $this->connexion->error;
-        }
+        }    
     }
+        //Para ordenar ciclicamente la timetables: ORDER BY @ciclo := (day_num - {$day_param} + 5)%5, CASE WHEN (@ciclo = 0) AND hour < {$hour_param} THEN 5 ELSE @ciclo, hour    
+        //Básicamente lo que hace esa linea es, si el dia es el actual, pero la hora de la clase ya ha pasado, se le asigna un 5, por tanto se colocará el último. Luego ordenamos por hora normal 
     
     public function ConvertQuerySQLtoClient() {
         $row_vector = [];
@@ -337,8 +336,8 @@ class queryManager {
             'status' => $this->status,
             'data' => $row_vector
         ];
-        if ($this->status == "query_error") {
-            $response['error'] = $this->error;
+        if ($this->status == "query_error") { // ?
+            $response['error'] = $this->error; 
         }
         return json_encode($response);
     }
@@ -349,7 +348,8 @@ class queryManager {
             case 'Tue': return 2;
             case 'Wed': return 3;
             case 'Thu': return 4;
-            default: return 5;   
+            case 'Fri': return 5;   
+            default: die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
         }
     }
     
@@ -368,9 +368,28 @@ class queryManager {
             case 'gt': return '>';
             case 'lte': return '<=';
             case 'lt': return '<';
-            case '=' return '=';
-            default: return ''; //Per exemple si la constraint es limit = 1 , entrariem en aquesta opció, per tant al vector de operands es guardaria com ''.
+            default return '=';         
         }     
+    }
+    //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
+    //però si el paràmetre es day, el converteix a int de totes maneres.
+    public function modifyValue($param,$value){
+        if($value == 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
+            switch($param){
+                case 'date': return date('Y-m-d');
+                case 'hour':  return date('H');
+                case 'day': return date('N');
+                case 'month': return date('m');
+                case 'year': return date('Y');
+                default:  die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
+            }              
+        }
+        else{
+            if($param == 'day'){
+                return  ConvertDaytoNum($value);
+            }
+            return $value;
+        }
     }
 }
 
@@ -421,4 +440,3 @@ function CheckInactivityTimer() {
     $_SESSION['last_activity'] = time();
 }
 ?>
-
