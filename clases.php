@@ -1,6 +1,5 @@
 <?php
 define('TIMEOUT_DURATION', 300); // Definir el tiempo de inactividad permitido
-//VIGILAR EL CASO DONDE NO HAYA QUERY , COMO POR EJEMPLO EN MARKS? . PORQUE SE ASIGNARÁ VACIO A LOS VECTORES DE LOS PARÁMETROS DE LAS QUERYS Y ESO PUEDE DAR PROBLEMAS EN EL FOR DE PROCESS QUERY
 class queryManager {
     public $connexion; 
     public $uri;
@@ -32,7 +31,7 @@ class queryManager {
     
     public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
 
-      $i = 0;
+      
       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
       if(parse_url($this->uri, PHP_URL_QUERY) === NULL){
          $this->num_constraints = 0;   //Si devuelve null querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
@@ -44,20 +43,18 @@ class queryManager {
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
            $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
-           $this->operandos[$i] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
-           $this->params[$i] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
-           $this->valores[$i] = modifyValue($this->params[$i],$exploded_query[0]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
-           $i++;
+           $this->operandos[] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
+           $this->params[] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
+           $this->valores[] = modifyValue($exploded_data_operand[0],$exploded_query[1]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]
+           
        }
      }
     }
     //La ideia será construir de forma dinàmica la petició SQL, anirem afegint les strings fins aconseguir la petició completa.
-    //Como lo tenemos ahora, si el order by se pone dentro del for, este no se pondrá para el caso de no poner ninguna query, (marks?), por tanto el order by se tiene que poner fuera del bucle
     public function ConvertQuerytoSQL() {
         $add_limit = false;
         $is_timetable = false;
         $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
-        //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
         $params = $this->params;
         $val = $this->valores;
@@ -67,7 +64,7 @@ class queryManager {
                 $add_limit = true;
                 $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
             }
-            elseif($this->table != 'timetables'){
+            elseif($this->table != 'timetables'){ //Si no es timetable, SI afegirem constraints
                 $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
             }
             else{
@@ -84,13 +81,14 @@ class queryManager {
            $query_sql .=" ORDER BY date ";
         }
         else{
-           die(json_encode(['status' => 'error', 'message' => 'Invalid table']));
-        }            
+           die(json_encode(['status' => 'error', 'message' => 'Invalid table name']));
+        } 
+
         if($add_limit){ //Al final de todo añadimos el LIMIT si se ha especificado en la constraint
             $query_sql .= " LIMIT {$num_limit}";
         }
        
-       $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
+        $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
         
         if ($this->sql_rows === false) {
             $this->status = "query_error";
@@ -149,7 +147,7 @@ class queryManager {
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
     //però si el paràmetre es day, el converteix a int de totes maneres.
     public function modifyValue($param,$value){
-        if($value == 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
+        if($value === 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
             switch($param){
                 case 'date': return date('Y-m-d');
                 case 'hour':  return date('H');
