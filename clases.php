@@ -32,11 +32,10 @@ class queryManager {
     
     public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
 
-       $i = 0;
-       $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
-       //OJO al hacer el parse url, si no hay query, (no hay nada despues del ?, parse_url devolverá false
-      if(parse_url($this->uri, PHP_URL_QUERY) === false){
-         $this->num_constraints = 0;   //Si devuelve false querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
+      $i = 0;
+      $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
+      if(parse_url($this->uri, PHP_URL_QUERY) === NULL){
+         $this->num_constraints = 0;   //Si devuelve null querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
       }
       else{
        $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints.
@@ -56,6 +55,7 @@ class queryManager {
     //Como lo tenemos ahora, si el order by se pone dentro del for, este no se pondrá para el caso de no poner ninguna query, (marks?), por tanto el order by se tiene que poner fuera del bucle
     public function ConvertQuerytoSQL() {
         $add_limit = false;
+        $is_timetable = false;
         $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
         //Las siguientes 3 lineas de código son para no poner nombres de variables tan largos todo el rato
         $op = $this->operandos;
@@ -63,36 +63,33 @@ class queryManager {
         $val = $this->valores;
         
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
-            if($params[$i] == "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
+            if($params[$i] === "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
                 $add_limit = true;
                 $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
             }
+            elseif($this->table != 'timetables'){
+                $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
+            }
             else{
-                if($this->table != 'timetables'){ //Si la taula a consultar es timetables, les constraints s'utilitzen al ORDER BY no al WHERE
-                    $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
-                    if($i == $num_constraints-1){ //Aquí habría que añadir el ORDER BY de las otras tablas, ya que estaras em la última iteración
-                        $query_sql .= " ORDER BY ";
-                        if($this->table == 'marks'){
-                            $query_sql .= "mark";
-                        }
-                        else if ($this->table == 'tasks'){
-                            $query_sql .= "date";
-                        }
-                        else{
-                             die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
-                        }
-                    }
-                }
-                else{  //Si la tabla es timetables, colocamos directamente el ORDER BY y salimos del ciclo for. Aqui se asume que las constraints para la consulta de timetables unicamente tiene 2 constraints, dia y hora
-                    $query_sql .=" ORDER BY @ciclo := (day_num - {$params[$i]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[$i+1]} {$val[$i+1]} THEN 5 ELSE @ciclo, hour ";
-                     exit;
-                }
+                $is_timetable = true; //Aquí no nos interesa salir del bucle for por si tuvieramos una constraint limit.  
             }                                               
+        } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
+        if($is_timetable){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
+           $query_sql .=" ORDER BY @ciclo := (day_num - {$params[0]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[1]} {$val[1]} THEN 5 ELSE @ciclo, hour ";
         }
-        if($add_limit){
+        elseif($this->table === 'marks'){
+           $query_sql .=" ORDER BY mark ";
+        }
+        elseif($this->table === 'tasks'){
+           $query_sql .=" ORDER BY date ";
+        }
+        else{
+           die(json_encode(['status' => 'error', 'message' => 'Invalid table']));
+        }            
+        if($add_limit){ //Al final de todo añadimos el LIMIT si se ha especificado en la constraint
             $query_sql .= " LIMIT {$num_limit}";
         }
-        
+       
        $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
         
         if ($this->sql_rows === false) {
@@ -218,6 +215,7 @@ function CheckInactivityTimer() {
     $_SESSION['last_activity'] = time();
 }
 ?>
+
 
 
 
