@@ -65,11 +65,12 @@ class queryManager {
                 if($this->table != 'timetables'){ //Si la taula a consultar es timetables, les constraints s'utilitzen al ORDER BY no al WHERE
                     $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
                     if($i == $num_constraints-1){ //Aquí habría que añadir el ORDER BY de las otras tablas, ya que estaras em la última iteración
+                        $query_sql .= " ORDER BY ";
                         if($this->table == 'marks'){
-                            $query_sql .= " ORDER BY mark";
+                            $query_sql .= "mark";
                         }
                         else if ($this->table == 'tasks'){
-                            $query_sql .= " ORDER BY date";
+                            $query_sql .= "date";
                         }
                         else{
                              die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
