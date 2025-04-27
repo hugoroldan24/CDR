@@ -174,7 +174,7 @@ class LogIn {
     
     public function getUsername($id) {
         $stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
-        $stmt->bind_param("i", $id);
+        $stmt->bind_param("s", $id);
         $stmt->execute();
         $result = $stmt->get_result();
         
