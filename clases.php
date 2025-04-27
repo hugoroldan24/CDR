@@ -180,12 +180,19 @@ class LogIn {
         
         if ($result->num_rows == 1) {
             $user_name = $result->fetch_assoc();
-            return json_encode(['status' => 'id_matched', 'data' => $user_name['name']]);
+            $response = [
+                'status' => 'id_matched',
+                'data' => $user_name['name']
+            ];
+           
         } else {
             session_unset();
             session_destroy();
-            return json_encode(['status' => 'id_not_matched']);                                 
+            $response = [
+                'status' => 'id_not_matched'
+            ];                                
         }
+        echo json_encode($response);
     }
 }
 
