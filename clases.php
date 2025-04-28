@@ -174,10 +174,11 @@ class LogIn {
     }
     
     public function getUsername($id) {
-        $stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
-        $stmt->bind_param("s", $id);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        
+        //$stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
+        //$stmt->bind_param("s", $id);
+        //$stmt->execute();
+        $result = $this->connexion->query("SELECT name FROM students WHERE uid = '{$id}' LIMIT 1");
         
         if ($result->num_rows == 1) {
             $user_name = $result->fetch_assoc();
@@ -193,6 +194,7 @@ class LogIn {
                 'status' => 'id_not_matched'
             ];                                
         }
+        header('Content-Type: application/json');
         echo json_encode($response);
     }
 }
