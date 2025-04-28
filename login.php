@@ -10,7 +10,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 $user_id = $_GET['id'];
-
+echo $user_id; //Esto es para debugar y ver si la ID es nula o no.
 include("connect.php");
 
 $login = new LogIn($connexion);
