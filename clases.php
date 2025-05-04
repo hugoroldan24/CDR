@@ -141,7 +141,8 @@ class queryManager {
             case 'lte': return '<=';
             case 'lt': return '<';
             default: return '=';         
-        }     
+        }  
+    }
     
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
     //però si el paràmetre es day, el converteix a int de totes maneres.
@@ -197,7 +198,7 @@ class LogIn {
                 'status' => 'id_not_matched'
             ];                                
         }
-        header('Content-Type: application/json');
+        header('Content-Type: application/json; charset=utf-8');
         return json_encode($response);
     }
 }
