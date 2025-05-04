@@ -140,7 +140,7 @@ class queryManager {
             case 'gt': return '>';
             case 'lte': return '<=';
             case 'lt': return '<';
-            default return '=';         
+            default: return '=';         
         }     
     
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
