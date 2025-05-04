@@ -2,14 +2,6 @@
 
 session_start();
 include("clases.php");
-include("connect.php"); #añadir codigo improtyante
-
-
-#if (isset($_GET['sid'])) {
- #   session_id($_GET['sid']);
-#}
-
-
 
 // Primero verificar inactividad
 CheckInactivityTimer();
@@ -20,6 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     die(json_encode(['status' => 'error', 'message' => 'Sesión no válida o expirada.']));
 }
 
+include("connect.php");
 try {
     $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']);
 
