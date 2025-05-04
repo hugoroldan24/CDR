@@ -9,6 +9,7 @@ try {
 } catch (Exception $e) {
     error_log("Database connection error: " . $e->getMessage());
     http_response_code(500);
+    header('Content-Type: application/json; charset=utf-8');
     die(json_encode(['status' => 'error', 'message' => 'Error de conexion con la base de datos']));
 }
 ?>
