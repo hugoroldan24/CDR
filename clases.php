@@ -168,7 +168,8 @@ class queryManager {
 
 class LogIn {
     public $connexion;
-      
+    public $id;
+    
     public function __construct($conn,$id) {
         $this->connexion = $conn;
         $this->id = $id;
@@ -179,7 +180,7 @@ class LogIn {
         //$stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
         //$stmt->bind_param("s", $id);
         //$stmt->execute();
-        $query = "SELECT name FROM students WHERE uid = '{$this->id}' ";
+        $query = "SELECT name FROM students WHERE uid = '{$this->id}'";
         $result = $this->connexion->query($query);
         
         if ($result->num_rows == 1) {
@@ -197,7 +198,7 @@ class LogIn {
             ];                                
         }
         header('Content-Type: application/json');
-        echo json_encode($response);
+        return json_encode($response);
     }
 }
 
