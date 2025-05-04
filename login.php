@@ -15,7 +15,7 @@ $login = new LogIn($connexion,$user_id);
 $_SESSION['user_id'] = $user_id;
 $_SESSION['connexion'] = true;
 $_SESSION['last_activity'] = time();
-$login->getUsername();
+echo($login->getUsername());
 
 
 $connexion->close();
