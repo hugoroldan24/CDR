@@ -169,16 +169,18 @@ class queryManager {
 class LogIn {
     public $connexion;
       
-    public function __construct($conn) {
+    public function __construct($conn,$id) {
         $this->connexion = $conn;
+        $this->id = $id;
     }
     
-    public function getUsername($id) {
+    public function getUsername() {
         
         //$stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
         //$stmt->bind_param("s", $id);
         //$stmt->execute();
-        $result = $this->connexion->query("SELECT name FROM students WHERE uid = '{$id}' LIMIT 1");
+        $query = "SELECT name FROM students WHERE uid = '{$this->id}' ";
+        $result = $this->connexion->query($query);
         
         if ($result->num_rows == 1) {
             $user_name = $result->fetch_assoc();
