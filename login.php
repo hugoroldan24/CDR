@@ -9,7 +9,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 }
 
 $user_id = $_GET['id'];
-¡include("connect.php");
+include("connect.php");
 $login = new LogIn($connexion,$user_id);
 $_SESSION['user_id'] = $user_id;
 $_SESSION['connexion'] = true;
