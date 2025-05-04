@@ -35,9 +35,9 @@ class queryManager {
          $this->num_constraints = 0;   //Si devuelve null querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
       }
       else{
-       $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints.
-       $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
-       foreach($total_constraints as $constraint){
+        $total_constraints = explode("&",parse_url($this->uri, PHP_URL_QUERY));  //Separa la query entre les constraints.
+        $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
+        foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
            $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
