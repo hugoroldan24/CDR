@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("clases.php");
 
 // Validar y sanitizar el ID
 //if (!isset($_GET['id']) || empty($_GET['id'])) {
@@ -10,6 +9,8 @@ include("clases.php");
 
 $user_id = $_GET['id'];
 include("connect.php");
+include("clases.php");
+
 $login = new LogIn($connexion,$user_id);
 $_SESSION['user_id'] = $user_id;
 $_SESSION['connexion'] = true;
