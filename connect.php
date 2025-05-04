@@ -1,11 +1,9 @@
 <?php
 try {
     $connexion = new mysqli('localhost', 'alvaro', '', 'Afrodita');
-
     if ($connexion->connect_error) {
         throw new Exception("Connection failed: " . $connexion->connect_error);
     }
-
     // Configurar el conjunto de caracteres
     $connexion->set_charset("utf8mb4");
 } catch (Exception $e) {
