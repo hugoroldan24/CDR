@@ -17,7 +17,7 @@ name VARCHAR(40)
 
 INSERT INTO students (uid, name) VALUES
 
-(00000001, 'Hugo'), (00000002, Pau), (00000003, Marc), (76C91605, Cristóbal), (156F0588, Álvaro);
+('00000001', 'Hugo'), ('00000002', 'Pau'), ('00000003', 'Marc'), ('76C91605', 'Cristóbal'), ('156F0588', 'Álvaro');
 
 
 CREATE TABLE tasks (
