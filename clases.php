@@ -55,19 +55,19 @@ class queryManager {
         $params = $this->params;
         $val = $this->valores;
         
-        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = {$this->id}) "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
+        $query_sql = "SELECT * FROM '{$this->table}' WHERE (uid = '{$this->id}') "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
 
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
             if($params[$i] === "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
                 $add_limit = true;
-                $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
+                $num_limit = $val[$i]; //Ens guardem el valor del limit 
             }
             elseif($this->table != 'timetables'){ //Si no es timetable, SI afegirem constraints
-                $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})"; //Alomejor aqui hay que ponerlo asi '{variable}' , con los ' '
+                $query_sql .= " AND ('{$params[$i]}' '{$op[$i]}' '{$val[$i]}')"; //Alomejor aqui hay que ponerlo asi '{variable}' , con los ' '
             }                                              
         } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
         if(($this->table === 'timetables'){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
-           $query_sql .=" ORDER BY @ciclo := (day_num - {$params[0]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour {$op[1]} {$val[1]} THEN 5 ELSE @ciclo, hour ";
+           $query_sql .=" ORDER BY @ciclo := (day_num - {$params[0]} + 5)%5, CASE WHEN (@ciclo = 0) AND hour '{$op[1]}' '{$val[1]}' THEN 5 ELSE @ciclo, hour ";
         }
         elseif($this->table === 'marks'){
            $query_sql .=" ORDER BY mark ";
@@ -81,7 +81,7 @@ class queryManager {
         } 
 
         if($add_limit){ //Al final de todo añadimos el LIMIT si se ha especificado en la constraint
-            $query_sql .= " LIMIT {$num_limit}";
+            $query_sql .= " LIMIT '{$num_limit}'";
         }
        
         $this->sql_rows = $this->connexion->query($query_sql); //Hacemos la petición a la base de datos
