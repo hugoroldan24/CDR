@@ -134,10 +134,22 @@ class AteneaClient(Gtk.Window):
     def on_query(self, widget):
      
         ## no hace falta estoAquí podemos añadir un switch y en funcion de la tabla que escriba, completar la query nosotros. Lo de query = no funcionará, hay que añadir 
+        table = self.query_entry.get_text().strip()
+        match table
+            case 'marks':
+                constraints = ""   
+            case 'timetables':
+                constraints = "day=now&hour[gt]=now"
+            case 'tasks':
+                constraints = "date[gte]=now" 
+            case _:
+                self.update_welcomelabel("Invalid table", "red")
+                
+            
         full_query = self.query_entry.get_text().strip()
 
-        if  full_query:
-             url = f"http://{self.server}:{self.port}/querys.php/{tablename}"
+        if  table:
+             url = f"http://{self.server}:{self.port}/querys.php/{table}?{constraints}"
              threading.Thread(target=self.do_query, args=(url,), daemon=True).start()
         else:
             self.update_welcomelabel("No query found!", "red")
