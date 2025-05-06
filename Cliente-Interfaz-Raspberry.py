@@ -144,7 +144,7 @@ class AteneaClient(Gtk.Window):
         if hasattr(self, "treeview"):
             self.treeview.destroy()
 
-        keys = [key for key in json_array[0].keys() if key != "uid"]
+        keys = [key for key in json_array[0].keys() if key not in ("uid", "day_int")]
         self.list = Gtk.ListStore(*[str] * len(keys))
 
         for item in json_array:
