@@ -131,9 +131,7 @@ class AteneaClient(Gtk.Window):
         self.loginlabel.set_text("Please login with your university card")
 
     # Cuando se envía una consulta
-    def on_query(self, widget):
-     
-        ## no hace falta estoAquí podemos añadir un switch y en funcion de la tabla que escriba, completar la query nosotros. Lo de query = no funcionará, hay que añadir 
+    def on_query(self, widget):     
         table = self.query_entry.get_text().strip()
         match table
             case 'marks':
@@ -143,17 +141,13 @@ class AteneaClient(Gtk.Window):
             case 'tasks':
                 constraints = "date[gte]=now" 
             case _:
-                self.update_welcomelabel("Invalid table", "red")
-                
-        if  table:
+                self.update_welcomelabel("Invalid table", "red")                
+        if table:
              url = f"http://{self.server}:{self.port}/querys.php/{table}?{constraints}"
              threading.Thread(target=self.do_query, args=(url,), daemon=True).start()
         else:
             self.update_welcomelabel("No query found!", "red")
-        return
-     
-
-    
+        return    
 
     # Ejecutar la consulta
     def do_query(self, url):
