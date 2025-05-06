@@ -145,9 +145,6 @@ class AteneaClient(Gtk.Window):
             case _:
                 self.update_welcomelabel("Invalid table", "red")
                 
-            
-        full_query = self.query_entry.get_text().strip()
-
         if  table:
              url = f"http://{self.server}:{self.port}/querys.php/{table}?{constraints}"
              threading.Thread(target=self.do_query, args=(url,), daemon=True).start()
