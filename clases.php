@@ -63,7 +63,7 @@ class queryManager {
                 $num_limit = (int)$val[$i]; //Ens guardem el valor del limit 
             }
             elseif($this->table != 'timetables'){ //Si no es timetable, SI afegirem constraints
-                $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})";
+                $query_sql .= " AND ({$params[$i]} {$op[$i]} {$val[$i]})"; //Alomejor aqui hay que ponerlo asi '{variable}' , con los ' '
             }
             else{
                 $is_timetable = true; //Aquí no nos interesa salir del bucle for por si tuvieramos una constraint limit.  
@@ -79,6 +79,7 @@ class queryManager {
            $query_sql .=" ORDER BY date ";
         }
         else{
+           header('Content-Type: application/json'); 
            die(json_encode(['status' => 'error', 'message' => 'Invalid table name']));
         } 
 
@@ -121,7 +122,8 @@ class queryManager {
             case 'Wed': return 3;
             case 'Thu': return 4;
             case 'Fri': return 5;   
-            default: die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
+            default:  header('Content-Type: application/json'); 
+                      die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
         }
     }
     
@@ -154,7 +156,7 @@ class queryManager {
                 case 'day': return date('N');
                 case 'month': return date('m');
                 case 'year': return date('Y');
-                default:  die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
+                default: header('Content-Type: application/json');  die(json_encode(['status' => 'error', 'message' => 'Invalid query format']));
             }              
         }
         else{
@@ -178,9 +180,6 @@ class LogIn {
     
     public function getUsername() {
         
-        //$stmt = $this->connexion->prepare("SELECT name FROM students WHERE uid = ?");
-        //$stmt->bind_param("s", $id);
-        //$stmt->execute();
         $query = "SELECT name FROM students WHERE uid = '{$this->id}'";
         $result = $this->connexion->query($query);
         
