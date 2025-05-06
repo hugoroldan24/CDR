@@ -133,7 +133,7 @@ class AteneaClient(Gtk.Window):
     # Cuando se envía una consulta
     def on_query(self, widget):     
         table = self.query_entry.get_text().strip()
-        match table
+        match table:
             case 'marks':
                 constraints = ""   
             case 'timetables':
