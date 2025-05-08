@@ -1,11 +1,11 @@
 import gi
-import urllib
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango
 import threading
 import time
 import lcddriver
 import json
+import requests
 from librerias import puzzle_1
 
 # Clase para encapsular el thread de lectura de UID
@@ -19,7 +19,7 @@ class UIDReaderThread(threading.Thread):
 
     def run(self):
         while self._running.is_set():
-            uid = obtener_uid()
+            uid = puzzle_1.obtener_uid()
             if uid:
                 GLib.idle_add(self.callback, uid)
             time.sleep(0.1)  # Evitar saturar CPU
