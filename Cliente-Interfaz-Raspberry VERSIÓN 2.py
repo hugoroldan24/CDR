@@ -27,18 +27,6 @@ class UIDReaderThread(threading.Thread):
     def stop(self):
         self._running.clear()
 
-# Función sencilla para hacer peticiones HTTP sin usar requests
-def http_get(url, timeout=5):
-    try:
-        with urllib.request.urlopen(url, timeout=timeout) as response:
-            if response.status == 200:
-                data = response.read()
-                return json.loads(data.decode('utf-8'))
-            else:
-                return None
-    except Exception as e:
-        print(f"Error HTTP: {e}")
-        return None
 
 class AteneaClient(Gtk.Window):
     def __init__(self):
@@ -103,7 +91,7 @@ class AteneaClient(Gtk.Window):
         data = http_get(url)
 
         if data:
-            name = data.get("name", "Desconocido")
+            name = data.get("date", "Desconocido")
             self.update_welcome_screen(name)
             # Si quieres mostrarlo también en el LCD
             # self.mostrar_lcd(name)
@@ -197,6 +185,24 @@ class AteneaClient(Gtk.Window):
         self.welcomelabel.set_text(f"Benvingut/da, {name}!")
         self.stack.set_visible_child_name("query")
 
+# Función sencilla para hacer peticiones HTTP sin usar requests
+def http_get(url, timeout=5):
+    try:
+        response = requests.get(url,timeout=5)
+        if response.status == 200:
+            print(f"URL final: {response.url}\n")
+            data = response.json()
+            if data:
+                return data
+            else
+                print("Empty response from server.")
+                return None
+        else:
+            print(f"HTTP Error: {response.status}")
+            return None            
+    except Exception as e:
+        print(f"Error HTTP: {e}")
+        return None
 
 if __name__ == "__main__":
     win = AteneaClient()
