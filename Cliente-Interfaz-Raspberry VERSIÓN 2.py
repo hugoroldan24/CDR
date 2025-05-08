@@ -191,7 +191,7 @@ class AteneaClient(Gtk.Window):
 def http_get(url):
     try:
         response = requests.get(url,timeout=5)
-        if response.status == 200:
+        if response.status_code == 200:
             print(f"URL final: {response.url}\n")
             data = response.json()
             if data:
