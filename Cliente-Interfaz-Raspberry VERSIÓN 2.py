@@ -91,7 +91,7 @@ class AteneaClient(Gtk.Window):
         data = http_get(url)
 
         if data:
-            name = data.get("date", "Desconocido")
+            name = data.get("data", "Desconocido")
             self.update_welcome_screen(name)
             # Si quieres mostrarlo también en el LCD
             # self.mostrar_lcd(name)
