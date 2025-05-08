@@ -186,7 +186,7 @@ class AteneaClient(Gtk.Window):
         self.stack.set_visible_child_name("query")
 
 # Función sencilla para hacer peticiones HTTP sin usar requests
-def http_get(url, timeout=5):
+def http_get(url):
     try:
         response = requests.get(url,timeout=5)
         if response.status == 200:
@@ -194,7 +194,7 @@ def http_get(url, timeout=5):
             data = response.json()
             if data:
                 return data
-            else
+            else:
                 print("Empty response from server.")
                 return None
         else:
