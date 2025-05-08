@@ -88,6 +88,7 @@ class AteneaClient(Gtk.Window):
     def process_uid(self, uid):
         self.update_loginlabel("Validando tarjeta en la base de datos...", "blue")
         url = f"http://{self.server}:{self.port}/Servidor/login.php?id={uid}"
+        
         data = http_get(url)
 
         if data:
@@ -190,6 +191,10 @@ class AteneaClient(Gtk.Window):
 # Función sencilla para hacer peticiones HTTP sin usar requests
 def http_get(url):
     try:
+        session = requests.Session()
+        response = session.get(url,timeout=10)
+
+        
         response = requests.get(url,timeout=5)
         if response.status_code == 200:
             print(f"URL final: {response.url}\n")
