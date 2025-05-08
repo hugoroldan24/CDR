@@ -87,7 +87,7 @@ class AteneaClient(Gtk.Window):
     # Procesar el UID recibido
     def process_uid(self, uid):
         self.update_loginlabel("Validando tarjeta en la base de datos...", "blue")
-        url = f"http://{self.server}:{self.port}/login.php?id={uid}"
+        url = f"http://{self.server}:{self.port}/Servidor/login.php?id={uid}"
         data = http_get(url)
 
         if data:
