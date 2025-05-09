@@ -208,10 +208,6 @@ function CheckInactivityTimer() {
 
     if ($time_inactive > TIMEOUT_DURATION) {
         include("logout.php");
-        session_unset();
-        session_destroy();
-        http_response_code(401);
-        die(json_encode(['status' => 'error', 'message' => 'Sesión expirada. Por favor, vuelve a iniciar sesión.']));
     }
     $_SESSION['last_activity'] = time();
 }
