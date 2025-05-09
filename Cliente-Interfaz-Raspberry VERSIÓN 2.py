@@ -190,7 +190,7 @@ class AteneaClient(Gtk.Window):
         self.welcomelabel.set_text(f"Benvingut/da, {name}!")
         self.stack.set_visible_child_name("query")
 
-# Función sencilla para hacer peticiones HTTP sin usar requests
+
 def http_get(session,url):
     try:
         response = session.get(url,timeout=10)  //Si ya tenemos cookies guardadas , se añadiran automáticamente 
