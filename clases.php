@@ -207,6 +207,7 @@ function CheckInactivityTimer() {
     $time_inactive = time() - $_SESSION['last_activity'];
 
     if ($time_inactive > TIMEOUT_DURATION) {
+        include("logout.php");
         session_unset();
         session_destroy();
         http_response_code(401);
