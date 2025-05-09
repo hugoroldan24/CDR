@@ -122,7 +122,10 @@ class AteneaClient(Gtk.Window):
 
     # Logout
     def on_logout(self, button):
+        url = f"http://{self.server}:{self.port}/Servidor/logout.php?"
+        http_get(self.session,url) //No usaremos la respuesta, por tanto lo podemos poner sin igualarle ninguna variable
         self.stack.set_visible_child_name("login")
+        
         self.loginlabel.set_text("Please login with your university card")
 
     # Cuando se envía una consulta
