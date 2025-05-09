@@ -22,8 +22,6 @@ class UIDReaderThread(threading.Thread):
             uid = puzzle_1.obtener_uid()
             if uid:
                 GLib.idle_add(self.callback, uid)
-            time.sleep(0.1)  # Evitar saturar CPU
-
     def stop(self):
         self._running.clear()
 
@@ -42,23 +40,38 @@ class AteneaClient(Gtk.Window):
         self.connect("destroy", self.on_destroy)
 
         # Layout principal usando Stack
+        self.configure_stack()
+        
+        # Pantalla de login
+        self.login_screen()   
+        
+        # Pantalla de consulta
+        self.query_screen
+        
+        # Iniciar hilo de lectura de UID
+        self.uid_thread = UIDReaderThread(self.process_uid)
+        self.uid_thread.start()
+        # Mostrar la pantalla de login al inicio
+        self.stack.set_visible_child_name("login")
+        self.show_all()
+        
+    def configure_stack(self):
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.stack.set_transition_duration(300)
         self.add(self.stack)
-
-        # Pantalla de login
+        
+    def login_screen(self):
         self.loginbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.stack.add_named(self.loginbox, "login")
         self.loginbox.set_margin_top(20)
         self.loginbox.set_margin_bottom(20)
         self.loginbox.set_margin_start(20)
         self.loginbox.set_margin_end(20)
-
         self.loginlabel = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
         self.loginbox.pack_start(self.loginlabel, False, False, 0)
-
-        # Pantalla de consulta
+        
+    def query_screen(self):
         self.querybox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.stack.add_named(self.querybox, "query")
         self.querybox.set_margin_top(10)
@@ -77,15 +90,7 @@ class AteneaClient(Gtk.Window):
         self.logout_button = Gtk.Button(label="Logout")
         self.logout_button.connect("clicked", self.on_logout)
         self.querybox.pack_start(self.logout_button, False, False, 0)
-
-        # Iniciar hilo de lectura de UID
-        self.uid_thread = UIDReaderThread(self.process_uid)
-        self.uid_thread.start()
-
-        # Mostrar la pantalla de login al inicio
-        self.stack.set_visible_child_name("login")
-        self.show_all()
-
+    
     # Procesar el UID recibido
     def process_uid(self, uid):
         self.update_loginlabel("Validando tarjeta en la base de datos...", "blue")
@@ -124,14 +129,10 @@ class AteneaClient(Gtk.Window):
     def on_query(self, widget):     
         table = self.query_entry.get_text().strip()
         match table:
-            case 'marks':
-                constraints = ""   
-            case 'timetables':
-                constraints = "day=now&hour[gt]=now"
-            case 'tasks':
-                constraints = "date[gte]=now" 
-            case _:
-                self.update_welcomelabel("Invalid table", "red")                
+            case 'marks': constraints = ""   
+            case 'timetables': constraints = "day=now&hour[gt]=now"
+            case 'tasks': constraints = "date[gte]=now" 
+            case _: self.update_welcomelabel("Invalid table", "red")                
         if table:
              url = f"http://{self.server}:{self.port}/Servidor/querys.php/{table}?{constraints}"
              threading.Thread(target=self.do_query, args=(url,), daemon=True).start()
@@ -141,7 +142,7 @@ class AteneaClient(Gtk.Window):
 
     # Ejecutar la consulta
     def do_query(self, url):
-        data = http_get(url)
+        data = http_get(self.session,url)
         if data:
             GLib.idle_add(self.create_table, data)
         else:
