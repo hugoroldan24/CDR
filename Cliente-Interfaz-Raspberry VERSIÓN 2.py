@@ -34,7 +34,8 @@ class AteneaClient(Gtk.Window):
         super().__init__(title="Client Atenea")
         self.server = "localhost"  # Cambiar por la IP del servidor
         self.port = "8000"  # Cambiar por el puerto del servidor
-
+        self.session = requests.Session() //Creamos la sesión
+        
         # Configuración de la ventana
         self.set_border_width(10)
         self.set_default_size(400, 300)
@@ -89,8 +90,7 @@ class AteneaClient(Gtk.Window):
     def process_uid(self, uid):
         self.update_loginlabel("Validando tarjeta en la base de datos...", "blue")
         url = f"http://{self.server}:{self.port}/Servidor/login.php?id={uid}"
-        self.session = requests.Session() //Creamos la sesión
-        data = http_get(url)
+        data = http_get(self.session,url)
 
         if data:
             name = data.get("data", "Desconocido")
@@ -190,11 +190,11 @@ class AteneaClient(Gtk.Window):
         self.stack.set_visible_child_name("query")
 
 # Función sencilla para hacer peticiones HTTP sin usar requests
-def http_get(url):
+def http_get(session,url):
     try:
-        response = self.session.get(url,timeout=10)  //Si ya tenemos cookies guardadas , se añadiran automáticamente 
+        response = session.get(url,timeout=10)  //Si ya tenemos cookies guardadas , se añadiran automáticamente 
         if response.status_code == 200:
-            self.session.cookies.get_dict()             //Guardamos las cookies en la Sesion
+            session.cookies.get_dict()             //Guardamos las cookies en la Sesion
             print(f"URL final: {response.url}\n")
             data = response.json()
             if data:
