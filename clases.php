@@ -41,9 +41,9 @@ class queryManager {
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
            $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
-           $this->operandos[] = convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
+           $this->operandos[] = $this->convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
            $this->params[] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
-           $this->valores[] = modifyValue($exploded_data_operand[0],$exploded_query[1]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]           
+           $this->valores[] = $this->modifyValue($exploded_data_operand[0],$exploded_query[1]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]           
        }
      }
     }
