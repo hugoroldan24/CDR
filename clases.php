@@ -30,7 +30,7 @@ class queryManager {
     // per introduir directament a una consulta SQL.
     
     public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
-      $this->table = trim(str_replace('/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
+      $this->table = trim(str_replace('/Servidor/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
       if(parse_url($this->uri, PHP_URL_QUERY) === NULL){
          $this->num_constraints = 0;   //Si devuelve null querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
       }
