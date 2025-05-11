@@ -108,7 +108,7 @@ class queryManager {
         if ($this->status == "query_error") { // ?
             $response['error'] = $this->error; 
         }
-        header('Content-Type: application/json');
+        //HE QUITADO EL HEADER AQUI
         return json_encode($response);
     }
     
