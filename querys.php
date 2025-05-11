@@ -15,8 +15,6 @@ try {
 
     $query_manager->ParseQuery();
     $query_manager->ConvertQuerytoSQL();
-
-    header('Content-Type: application/json');
     echo ($query_manager->ConvertQuerySQLtoClient());
 } catch (Exception $e) {
     http_response_code(500);
