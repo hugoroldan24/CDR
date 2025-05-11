@@ -146,7 +146,7 @@ class AteneaClient(Gtk.Window):
     # Ejecutar la consulta
     def do_query(self, url):
         raw = http_get(self.session,url) //Esto te devuelve un diccionario
-        if data:
+        if raw:
             GLib.idle_add(self.create_table, raw.get("data",[])) //Le pasamos por parametros una lista de diccionarios
         else:
             GLib.idle_add(self.update_welcomelabel, "Connection error", "red")
