@@ -124,8 +124,7 @@ class AteneaClient(Gtk.Window):
     def on_logout(self, button):
         url = f"http://{self.server}:{self.port}/Servidor/logout.php?"
         http_get(self.session,url) //No usaremos la respuesta, por tanto lo podemos poner sin igualarle ninguna variable
-        self.stack.set_visible_child_name("login")
-        
+        self.stack.set_visible_child_name("login")        
         self.loginlabel.set_text("Please login with your university card")
 
     # Cuando se envía una consulta
@@ -146,6 +145,7 @@ class AteneaClient(Gtk.Window):
     # Ejecutar la consulta
     def do_query(self, url):
         raw = http_get(self.session,url) //Error, esto es de tipo 'str' y no un diccionario como pensábamos.
+        print(raw);                //PARA DEBUGAR
         if raw:
             GLib.idle_add(self.create_table, raw.get("data",[])) //Le pasamos por parametros una lista de diccionarios
         else:
@@ -156,28 +156,23 @@ class AteneaClient(Gtk.Window):
         if not json_array:
             print("No data")
             return
-
         if hasattr(self, "treeview"):
             self.treeview.destroy()
 
         exclude_keys = {"uid", "day_int"}
         keys = [k for k in json_array[0].keys() if k not in exclude_keys]
-
         self.list = Gtk.ListStore(*[str] * len(keys))
-
         for item in json_array:
             fila = [str(item.get(key, "-")) for key in keys]
             self.list.append(fila)
-
         self.treeview = Gtk.TreeView(model=self.list)
         for i, key in enumerate(keys):
             renderer = Gtk.CellRendererText()
             columna = Gtk.TreeViewColumn(key, renderer, text=i)
             self.treeview.append_column(columna)
-
         self.querybox.pack_start(self.treeview, True, True, 0)
         self.querybox.show_all()
-
+        
     # Actualizar etiqueta de login
     def update_loginlabel(self, text, color="red"):
         safe_text = str(text).replace('&', '&amp;').replace('<', '&lt;')
