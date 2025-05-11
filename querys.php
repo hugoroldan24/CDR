@@ -12,7 +12,6 @@ CheckInactivityTimer();
 include("connect.php");
 try {
     $query_manager = new queryManager($connexion, $_SERVER['REQUEST_URI'], $_SESSION['user_id']);
-
     $query_manager->ParseQuery();
     $query_manager->ConvertQuerytoSQL();
     echo ($query_manager->ConvertQuerySQLtoClient());
