@@ -46,7 +46,7 @@ class AteneaClient(Gtk.Window):
         self.login_screen()   
         
         # Pantalla de consulta
-        self.query_screen
+        self.query_screen()
         
         # Iniciar hilo de lectura de UID
         self.uid_thread = UIDReaderThread(self.process_uid)
