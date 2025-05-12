@@ -19,7 +19,7 @@ username VARCHAR(40)
 
 INSERT INTO students (uid, name) VALUES
 
-('00000001', 'Hugo','hugoroldan','1234'), ('00000002', 'Pau','paumagro','contraseña'), ('00000003', 'Marc','marcmartin','agua'), ('76C91605', 'Cristóbal','cristobalroca','pintura'), ('156F0588', 'Álvaro','alvaromartinez','pantalones');
+('741E048B', 'Hugo','hugoroldan','1234'), ('00000002', 'Pau','paumagro','contraseña'), ('00000003', 'Marc','marcmartin','agua'), ('76C91605', 'Cristóbal','cristobalroca','pintura'), ('156F0588', 'Álvaro','alvaromartinez','pantalones');
 
 
 CREATE TABLE tasks (
