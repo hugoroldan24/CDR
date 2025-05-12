@@ -13,11 +13,13 @@ entrar en a la base de datos: USE Afrodita;
 CREATE TABLE students (
 uid VARCHAR(20) PRIMARY KEY,
 name VARCHAR(40)
+password VARCHAR(40)
+username VARCHAR(40)
 );
 
 INSERT INTO students (uid, name) VALUES
 
-('00000001', 'Hugo'), ('00000002', 'Pau'), ('00000003', 'Marc'), ('76C91605', 'Cristóbal'), ('156F0588', 'Álvaro');
+('00000001', 'Hugo','hugoroldan','1234'), ('00000002', 'Pau','paumagro','contraseña'), ('00000003', 'Marc'), ('76C91605', 'Cristóbal'), ('156F0588', 'Álvaro');
 
 
 CREATE TABLE tasks (
