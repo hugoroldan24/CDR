@@ -38,7 +38,7 @@ INSERT INTO tasks (uid, date, subject, name) VALUES
 ('741E048B', '2025-05-17','PBE', 'Puzzle2'),('741E048B', '2025-05-19','TD', 'Parcial'),('741E048B', '2025-05-18','FISE', 'Practica 4'),
 ('00000002', '2025-05-17','PBE', 'Puzzle2'),('00000002', '2025-05-19','AST', 'Control Lab'),('00000002', '2025-05-18','ICOM', 'Practica 2'),
 ('76C91605', '2025-05-17','PBE', 'Puzzle2'),('76C91605', '2025-05-19','EIM', 'Ejercicio 3'),('76C91605', '2025-05-18','PSAVC', 'Parcial'),
-('00000001', '2025-05-17','PBE', 'Puzzle2'),('00000001', '2025-05-19','RP', 'Parcial'),('00000001', '2025-05-18','TD', 'Parcial');
+('00000003', '2025-05-17','PBE', 'Puzzle2'),('00000001', '2025-05-19','RP', 'Parcial'),('00000003', '2025-05-18','TD', 'Parcial');
 
 CREATE TABLE timetables (
 
@@ -58,7 +58,7 @@ INSERT INTO timetables (uid, day, hour, subject, room, day_int) VALUES
 ('741E048B', 'Thursday', '14:00', 'PBE', 'A3205', 4),('741E048B', 'Wednesday', '10:00', 'TD', 'A3001', 3),('741E048B', 'Monday', '18:00', 'FISE', 'A3002', 1),
 ('00000002', 'Thursday', '14:00', 'PBE', 'A3205', 4),('00000002', 'Wednesday', '15:00', 'AST', 'A3002', 3),('00000002', 'Tuesday', '10:00', 'ICOM', 'A3002', 2),
 ('76C91605', 'Thursday', '14:00', 'PBE', 'A3205', 4),('76C91605', 'Wednesday', '10:00', 'TD', 'A3001', 3),('76C91605', 'Monday', '8:00', 'PSAVC', 'A3205', 1),
-('00000001', 'Thursday', '14:00', 'PBE', 'A3205', 4),('00000001', 'Friday', '12:00', 'RP', 'A3205', 5),('00000001', 'Tuesday', '8:00', 'DSBM', 'A3205', 2);
+('00000003', 'Thursday', '14:00', 'PBE', 'A3205', 4),('00000003', 'Friday', '12:00', 'RP', 'A3205', 5),('00000003', 'Tuesday', '8:00', 'DSBM', 'A3205', 2);
 
 CREATE TABLE marks (
 
@@ -76,4 +76,4 @@ INSERT INTO marks ( uid, subject, name, mark) VALUES
 ('741E048B','PBE', 'Puzzle1', 7),('741E048B','RP', 'Parcial', 7),('741E048B','PBE', 'Puzzle2', 7),
 ('00000002','PBE', 'Puzzle1', 8),('00000002','DSBM', 'Parcial', 7),('00000002','PBE', 'Puzzle2', 6),
 ('76C91605','PBE', 'Puzzle1', 7),('76C91605','RP', 'Parcial', 7),('76C91605','PBE', 'Puzzle2', 8),
-('00000001','PBE', 'Puzzle1', 9),('00000001','DSBM', 'Parcial', 8),('00000001','PBE', 'Puzzle2', 7);
+('00000003','PBE', 'Puzzle1', 9),('00000003','DSBM', 'Parcial', 8),('00000003','PBE', 'Puzzle2', 7);
