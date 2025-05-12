@@ -12,8 +12,8 @@ entrar en a la base de datos: USE Afrodita;
 
 CREATE TABLE students (
 uid VARCHAR(20) PRIMARY KEY,
-name VARCHAR(40)
-password VARCHAR(40)
+name VARCHAR(40),
+password VARCHAR(40),
 username VARCHAR(40)
 );
 
