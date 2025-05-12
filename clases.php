@@ -56,7 +56,7 @@ class queryManager {
         $params = $this->params;
         $val = $this->valores;
         
-        $query_sql = "SELECT * FROM '{$this->table}' WHERE (uid = '{$this->id}') "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
+        $query_sql = "SELECT * FROM {$this->table} WHERE (uid = '{$this->id}') "; //Ojo , estoy poniendo * en el SELECT, por tanto me devolverá las filas con el uid, esto habrá que gestionarlo en el cliente
 
         for($i=0;$i<$this->num_constraints;$i++){    //El numero de constraints coincidirà amb la quantitat de elements als vectores operandos,param,valores
             if($params[$i] === "limit"){ //Si la constraint és un limit, activem un flag per tal de que al final de la SQL query introduim el LIMIT 
