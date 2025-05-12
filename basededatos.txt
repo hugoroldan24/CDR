@@ -38,7 +38,7 @@ INSERT INTO tasks (uid, date, subject, name) VALUES
 ('741E048B', '2025-05-17','PBE', 'Puzzle2'),('741E048B', '2025-05-19','TD', 'Parcial'),('741E048B', '2025-05-18','FISE', 'Practica 4'),
 ('00000002', '2025-05-17','PBE', 'Puzzle2'),('00000002', '2025-05-19','AST', 'Control Lab'),('00000002', '2025-05-18','ICOM', 'Practica 2'),
 ('76C91605', '2025-05-17','PBE', 'Puzzle2'),('76C91605', '2025-05-19','EIM', 'Ejercicio 3'),('76C91605', '2025-05-18','PSAVC', 'Parcial'),
-('00000003', '2025-05-17','PBE', 'Puzzle2'),('00000001', '2025-05-19','RP', 'Parcial'),('00000003', '2025-05-18','TD', 'Parcial');
+('00000003', '2025-05-17','PBE', 'Puzzle2'),('00000003', '2025-05-19','RP', 'Parcial'),('00000003', '2025-05-18','TD', 'Parcial');
 
 CREATE TABLE timetables (
 
