@@ -16,10 +16,11 @@ class queryManager {
     public $params;
     public $num_constraints;
   
-    public function __construct($conn, $uri) {
+    public function __construct($conn, $uri,$id) {
         $this->status = "valid_query";
         $this->connexion = $conn;
         $this->uri = $uri;
+        $this->id = $id
         
         
         $this->operandos = [];
