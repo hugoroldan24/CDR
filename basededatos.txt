@@ -17,9 +17,9 @@ password VARCHAR(40),
 username VARCHAR(40)
 );
 
-INSERT INTO students (uid, name, username, password) VALUES
+INSERT INTO students (uid, name, password, username) VALUES
 
-('741E048B', 'Hugo','hugoroldan','1234'), ('00000002', 'Pau','paumagro','contraseña'), ('00000003', 'Marc','marcmartin','agua'), ('76C91605', 'Cristóbal','cristobalroca','pintura'), ('156F0588', 'Álvaro','alvaromartinez','pantalones');
+('741E048B', 'Hugo','1234','hugoroldan'), ('00000002', 'Pau','contraseña','paumagro'), ('00000003', 'Marc','agua','marcmartin'), ('76C91605', 'Cristóbal','pintura','cristobalroca'), ('156F0588', 'Álvaro','pantalones','alvaromartinez');
 
 
 CREATE TABLE tasks (
