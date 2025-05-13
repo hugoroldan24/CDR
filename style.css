@@ -1,1 +1,25 @@
+/* Estilo global */
+* {
+    font-family: "Arial";
+    font-size: 14px;
+}
+
+/* Estilo del TreeView */
+treeview {
+    background-color: #001f3f;  /* Azul marino */
+    color: white;
+    border: none;
+}
+
+/* Alternancia de colores: necesitas lógica adicional para hacerlo desde CSS */
+treeview row:nth-child(even) {
+    background-color: #0074D9;  /* Azul claro */
+}
+
+/* Estilo de etiquetas de bienvenida/login */
+label#welcome-label {
+    font-weight: bold;
+    font-size: 16px;
+    color: #0074D9;
+}
 
