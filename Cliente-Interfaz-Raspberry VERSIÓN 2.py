@@ -30,6 +30,14 @@ class AteneaClient(Gtk.Window):
     
     def __init__(self):
         super().__init__(title="Client Atenea")
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path("estilo.css")
+        Gtk.StyleContext.add_provider_for_screen(
+            dk.Screen.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        
         self.server = "localhost"  # Cambiar por la IP del servidor
         self.port = "8000"  # Cambiar por el puerto del servidor
         self.session = requests.Session() //Creamos la sesión
