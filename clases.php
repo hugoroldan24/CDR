@@ -147,6 +147,8 @@ class queryManager {
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
     //però si el paràmetre es day, el converteix a int de totes maneres.
     public function modifyValue($param,$value){
+        echo($param);
+        exit;
         if($value === 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
             switch($param){
                 case 'date': return date('Y-m-d');
