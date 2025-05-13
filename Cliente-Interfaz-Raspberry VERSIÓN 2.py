@@ -144,7 +144,7 @@ class AteneaClient(Gtk.Window):
 
     # Ejecutar la consulta
     def do_query(self, url):
-        raw = http_get(self.session,url) //Error, esto es de tipo 'str' y no un diccionario como pensábamos.
+        raw = http_get(self.session,url) 
         print(raw);                //PARA DEBUGAR
         if raw:
             GLib.idle_add(self.create_table, raw.get("data",[])) //Le pasamos por parametros una lista de diccionarios
