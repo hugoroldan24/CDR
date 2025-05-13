@@ -40,9 +40,9 @@ class queryManager {
         $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
         foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
-           $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
+           $exploded_data_operand = explode("%5B",$exploded_query[0]);    //date ,gte]  //Los corchetes ([ y ]) son caracteres reservados en las URLs , por tanto al hacer la URL se convierten a %5B i %5D respectivamente
 
-           $this->operandos[] = $this->convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
+           $this->operandos[] = $this->convertOperator(rtrim($exploded_data_operand[1],"%5D"));     //Obtenim l'operand 
            $this->params[] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
            $this->valores[] = $this->modifyValue($exploded_data_operand[0],$exploded_query[1]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]           
        }
@@ -64,7 +64,7 @@ class queryManager {
                 $num_limit = $val[$i]; //Ens guardem el valor del limit 
             }
             elseif($this->table != 'timetables'){ //Si no es timetable, SI afegirem constraints
-                $query_sql .= " AND ('{$params[$i]}' '{$op[$i]}' '{$val[$i]}')"; //Alomejor aqui hay que ponerlo asi '{variable}' , con los ' '
+                $query_sql .= " AND ({$params[$i]} {$op[$i]} '{$val[$i]}')"; //Alomejor aqui hay que ponerlo asi '{variable}' , con los ' '
             }                                              
         } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
         if($this->table === 'timetables'){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
@@ -147,8 +147,6 @@ class queryManager {
     //Aquesta funció es per convertir la paraula reservada 'now' en la forma de temps actual especifiada al paràmetre. Si el valor no es now, es retorna el mateix valor que hi havia,
     //però si el paràmetre es day, el converteix a int de totes maneres.
     public function modifyValue($param,$value){
-        echo($param);
-        exit;
         if($value === 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
             switch($param){
                 case 'date': return date('Y-m-d');
