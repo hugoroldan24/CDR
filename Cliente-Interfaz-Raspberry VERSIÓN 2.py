@@ -126,6 +126,8 @@ class AteneaClient(Gtk.Window):
         http_get(self.session,url) //No usaremos la respuesta, por tanto lo podemos poner sin igualarle ninguna variable
         self.stack.set_visible_child_name("login")        
         self.loginlabel.set_text("Please login with your university card")
+        self.treeview.destroy()
+        self.treeview = None  # Eliminamos la referencia
 
     # Cuando se envía una consulta
     def on_query(self, widget):     
