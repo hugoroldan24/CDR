@@ -142,7 +142,7 @@ class AteneaClient(Gtk.Window):
         table = self.query_entry.get_text().strip()
         match table:
             case 'marks': constraints = ""   
-            case 'timetables': constraints = "day=now&hour[gt]=now"
+            case 'timetables': constraints = "day=now&hour[lt]=now"
             case 'tasks': constraints = "date[gte]=now" 
             case _: self.update_welcomelabel("Invalid table", "red")                
         if table:
