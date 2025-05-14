@@ -15,8 +15,6 @@ if (ini_get("session.use_cookies")) {
       ini_get("session.cookie_httponly")
     );
 }
-
-http_response_code(401);
 header('Content-Type: application/json');
-die(json_encode(['status' => 'error', 'message' => 'Sesión expirada']));
+echo(json_encode(['status' => 'error', 'message' => 'Sesión expirada']));
 ?>
