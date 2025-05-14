@@ -16,5 +16,5 @@ if (ini_get("session.use_cookies")) {
     );
 }
 header('Content-Type: application/json');
-die(json_encode(['status' => 'error', 'message' => 'Sesión expirada']));
+die(json_encode(['status' => 'expired', 'message' => 'Sesión expirada']));
 ?>
