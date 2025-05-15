@@ -96,7 +96,7 @@ class AteneaClient(Gtk.Window):
         self.querybox.pack_start(self.query_entry, False, False, 0)
 
         self.logout_button = Gtk.Button(label="Logout")
-        self.logout_button.connect("clicked", self.on_logout)
+        self.logout_button.connect("clicked", self.intermediario)
         self.querybox.pack_start(self.logout_button, False, False, 0)
     
     # Procesar el UID recibido
@@ -127,7 +127,7 @@ class AteneaClient(Gtk.Window):
         print("Ventana cerrada. Saliendo de la aplicación.")
         self.uid_thread.stop()
         Gtk.main_quit()
-
+    
     # Logout
     def on_logout(self, button):
         url = f"http://{self.server}:{self.port}/Servidor/logout.php?"
@@ -156,7 +156,10 @@ class AteneaClient(Gtk.Window):
     # Ejecutar la consulta
     def do_query(self, url):
         raw = http_get(self.session,url) 
-        if raw.
+        if (raw.get("status",[]) === 'expired'){
+            self.on_logout();
+            return
+        }
         if raw:
             GLib.idle_add(self.create_table, raw.get("data",[])) //Le pasamos por parametros una lista de diccionarios
         else:
