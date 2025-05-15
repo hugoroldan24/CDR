@@ -132,7 +132,8 @@ class AteneaClient(Gtk.Window):
     def on_logout(self, button):
         url = f"http://{self.server}:{self.port}/Servidor/logout.php?"
         http_get(self.session,url) //No usaremos la respuesta, por tanto lo podemos poner sin igualarle ninguna variable
-        self.stack.set_visible_child_name("login")        
+        self.stack.set_visible_child_name("login")      
+        self.query_entry.set_text("")
         self.loginlabel.set_text("Please login with your university card")
         self.treeview.destroy()
         self.treeview = None  # Eliminamos la referencia
@@ -166,8 +167,9 @@ class AteneaClient(Gtk.Window):
         if not json_array:
             print("No data")
             return
-        if hasattr(self, "treeview"):
+       if getattr(self, "treeview", None):
             self.treeview.destroy()
+            self.treeview = None
 
         exclude_keys = {"uid", "day_int","id"}
         keys = [k for k in json_array[0].keys() if k not in exclude_keys]
