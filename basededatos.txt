@@ -14,7 +14,7 @@ CREATE TABLE students (
 uid VARCHAR(20) PRIMARY KEY,
 name VARCHAR(40),
 password VARCHAR(40),
-username VARCHAR(40) UNIQUE
+username VARCHAR(40) 
 );
 
 INSERT INTO students (uid, name, password, username) VALUES
