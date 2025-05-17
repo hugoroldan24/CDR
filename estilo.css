@@ -1,0 +1,34 @@
+body { /*BODY = TODO EL CONTENIDO QUE ESTÁ DENTRO DE BODY EN EL CÓDIGO HTML DEL CLIENTE*/
+  height: 100vh;
+  background: aquamarine;
+  display: flex; /*CREA EL CONTENIDO (UNA CAJA)*/
+  justify-content: center; /* ESTO PONE EL CONTENDIO EN EL CENTRO (X)*/
+  align-items: center;     /* ESTO LIMITA LO LARGO QUE ES EL CONTENDIO (Y) */
+}
+
+#login-form { /*SELECIONAMOS EL CONTENDIO DENTRO DEL LOGIN-FORM*/
+  display: flex; /*CREA EL CONTENIDO (UNA CAJA)*/
+  flex-direction: column; /*LO CREA DE FORMA DE COLUMNA*/
+  align-items: center; /* ESTO LIMITA LO LARGO QUE ES EL CONTENDIO (Y) */
+  gap: 15px; /*SEPARACIÓNES ENTRE LAS FILAS*/
+  width: 250px;
+  height: 350px;
+  padding: 20px; /*CREA UN BORDE*/
+  background: gainsboro; /*COLOR DEL FONDO DE LA CAJA DEL LOGIN*/
+  box-shadow: 0 4px 10px black; /*BORDE EXTERIOR DIFUMINADO NEGRO*/
+}
+
+#imagen { /*SELECIONAMOS LA IMAGEN DE AFRODITA*/
+  width: 200px; /*TAMAÑO ANCHO*/
+  height: 200px; /*TAMAÑO LARGO*/
+  border: 2px solid black; /*MODIFICAR EL BORDE*/
+  object-fit: cover; /* LA IMAGEN NO SE RECORTA*/
+}
+
+#user-id,#user-pass{ /*SELECIONAMOS EL RECTANGULO DEL USERNAME Y PASSWORD*/
+  padding: 10px; /*CREA EL TAMAÑAO DEL RECTANGULO*/
+}
+
+.hidden{
+  display: none;
+}
