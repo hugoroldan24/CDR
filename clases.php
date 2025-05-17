@@ -20,7 +20,7 @@ class queryManager {
         $this->status = "valid_query";
         $this->connexion = $conn;
         $this->uri = $uri;
-        $this->id = $id
+        $this->id = $id;
         
         
         $this->operandos = [];
@@ -32,7 +32,7 @@ class queryManager {
     
     public function ParseQuery(){ //Al sacar la URI por ejemplo, si tu URL és https://192.168.1.1:8000/servidor.php/table?date[gte]=now, la URI será /querys.php/table?date[gte]=now
       $this->table = trim(str_replace('/Servidor/querys.php/', '', parse_url($this->uri, PHP_URL_PATH))); //Obtenir la taula el PATH será x ejemplo /querys.php/table
-      if(parse_url($this->uri, PHP_URL_QUERY) === NULL){
+      if(parse_url($this->uri, PHP_URL_QUERY) === ''){ //EN EL CLIENTE RPi HAY QUE IGUALAR LA CONDICIÓN A NULL Y NO A '' 
          $this->num_constraints = 0;   //Si devuelve null querrá decir que no hay querys, por tanto num_constraints = 0 (de esta forma no entraremos en el for del proccessQuery)   
       }
       else{
@@ -40,9 +40,9 @@ class queryManager {
         $this->num_constraints = count($total_constraints);                      //Guardem el número de constraints
         foreach($total_constraints as $constraint){
            $exploded_query = explode("=",$constraint); //Ejemplo date[gte] , now
-           $exploded_data_operand = explode("%5B",$exploded_query[0]);    //date ,gte]  //Los corchetes ([ y ]) son caracteres reservados en las URLs , por tanto al hacer la URL se convierten a %5B i %5D respectivamente
+           $exploded_data_operand = explode("[",$exploded_query[0]);    //date ,gte]
 
-           $this->operandos[] = $this->convertOperator(rtrim($exploded_data_operand[1],"%5D"));     //Obtenim l'operand 
+           $this->operandos[] = $this->convertOperator(rtrim($exploded_data_operand[1],"]"));     //Obtenim l'operand 
            $this->params[] = $exploded_data_operand[0];                                    //Obtenim el paràmetre (date,hour...)
            $this->valores[] = $this->modifyValue($exploded_data_operand[0],$exploded_query[1]);            //Passem per paràmetre el paràmetre y el valor (el que ve despres del =) que es troba a $exploded_query[0]           
        }
@@ -68,7 +68,7 @@ class queryManager {
             }                                              
         } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
         if($this->table === 'timetables'){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
-           $query_sql .= " ORDER BY 
+           $query_sql .=" ORDER BY 
            		    CASE 
            		    	WHEN ((day_int - {$val[0]} + 7)%7) = 0 
            		    		AND hour {$op[1]} CAST('{$val[1]}' AS TIME)
@@ -157,7 +157,7 @@ class queryManager {
         if($value === 'now'){    //Si el parámetro es now, seguro que el valor estará relacionado con alguna medida de tiempo
             switch($param){
                 case 'date': return date('Y-m-d');
-                case 'hour':  return date('H');
+                case 'hour':  return date('H:i');
                 case 'day': return date('N');
                 case 'month': return date('m');
                 case 'year': return date('Y');
@@ -173,7 +173,47 @@ class queryManager {
     }
 
 }
+//CLASE LOGIN PARA EL CLIENTE WEB
+class LogIn {
+    public $connexion;
+    public $id;
+    public $password;
+    public $username;
+    
+    public function __construct($conn,$password,$username) {
+        $this->connexion = $conn;
+        $this->password = $password;
+        $this->username = $username;
+        
+    }
+    
+    public function getUsername() {
+        
+        $query = "SELECT name,uid FROM students WHERE password = '{$this->password}' AND username = '{$this->username}'";
+        
+        
+        $result = $this->connexion->query($query);
+        
+        if ($result->num_rows == 1) {
+            $result = $result->fetch_assoc();
+            $response = [
+                'status' => 'id_matched',
+                'data' => $result
+            ];
+           
+        } else {
+            session_unset();
+            session_destroy();
+            $response = [
+                'status' => 'id_not_matched'
+            ];                                
+        }
+        header('Content-Type: application/json; charset=utf-8');
+        return $response;
+    }
+}
 
+//CLASE LOGIN PARA EL CLIENTE RPi
 class LogIn {
     public $connexion;
     public $id;
