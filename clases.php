@@ -70,10 +70,10 @@ class queryManager {
         if($this->table === 'timetables'){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
            $query_sql .= " ORDER BY 
            		    CASE 
-           		    	WHEN ((day_int - {$val[0]} + 5)%5) = 0 
+           		    	WHEN ((day_int - {$val[0]} + 7)%7) = 0 
            		    		AND hour {$op[1]} CAST('{$val[1]}' AS TIME)
            		    	THEN 5 
-           		    	ELSE ((day_int - {$val[0]} + 5)%5)
+           		    	ELSE ((day_int - {$val[0]} + 7)%7)
            		    END, 
            		    hour ";
         }
