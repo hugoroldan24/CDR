@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>UPC-AFRODITA</title>
+  <link rel="stylesheet" href="estilo.css" />
+</head>
+<body>
+  <div id="login-section">
+    <div id="login-message" class="hidden"></div>   <!--Este es un label donde si el username es null, cambiaremos el texto y pondremos: Usuario o contraseña incorrectos-->
+    <form id="login-form">
+      <img src="FOTO_AFRODITA.jpg" alt="FOTO_AFRODITA" id="imagen" />
+      <input type="text" id="user-id" placeholder="Username" required>
+      <input type="password" id="user-pass" placeholder="Password" required>
+      <button id="login-button" type="button">Log In</button>
+    </form>
+  </div>
+
+  <div id="query-section" class="hidden">
+    <h2 id="welcome-label"></h2>  <!--Este es el label donde una vez nos logeamos bien, mostraremos el Welcome {username}-->
+    <form id="query-form">
+      <input type="text" id="user-query" placeholder="Please, write your query" required>
+      <button id="query-button" type="button">Submit Query</button>
+      <button id="logout-button" type="button">Log Out</button>
+    </form>
+    <div id="query-results"></div>
+    <div id="query-message" class="hidden"></div>
+  </div>
+ 
+  <script src="logic.js"></script>
+  <script src="cliente.js"></script>
+</body>
+</html>
