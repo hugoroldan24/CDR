@@ -78,7 +78,7 @@ class queryManager {
            		    hour ";
         }
         elseif($this->table === 'marks'){
-           $query_sql .=" ORDER BY mark ";
+           $query_sql .=" ORDER BY subject ";
         }
         elseif($this->table === 'tasks'){
            $query_sql .=" ORDER BY date ";
