@@ -68,13 +68,14 @@ class queryManager {
             }                                              
         } //Los ORDER BY es lo único que aun no se como hacerlo sin particularizar por tablas...
         if($this->table === 'timetables'){ //Aquí asumimos que el orden de las constraints en la query de timetables será primero dia y después hora  ex: timetables?day=Fri&hour=now
-           $query_sql .= " ORDER BY
-		        	@ciclo := (day_int - {$val[0]} + 5)%5,
-			        CASE
-                        WHEN (@ciclo = 0) AND hour  {$op[1]} '{$val[1]}' THEN 5
-                        ELSE @ciclo
-                    END,
-				hour";
+           $query_sql .= " ORDER BY 
+           		    CASE 
+           		    	WHEN ((day_int - {$val[0]} + 5)%5) = 0 
+           		    		AND hour {$op[1]} CAST('{$val[1]}' AS TIME)
+           		    	THEN 5 
+           		    	ELSE ((day_int - {$val[0]} + 5)%5)
+           		    END, 
+           		    hour ";
         }
         elseif($this->table === 'marks'){
            $query_sql .=" ORDER BY mark ";
