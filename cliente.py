@@ -86,6 +86,7 @@ class AteneaClient(Gtk.Window):
         self.querybox.pack_start(self.query_entry, False, False, 0)
 
         self.logout_button = Gtk.Button(label="Logout")
+        self.logout_button.set_name("logout_button")
         self.logout_button.connect("clicked", self.on_logout)
         self.querybox.pack_start(self.logout_button, False, False, 0)
     
