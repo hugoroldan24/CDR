@@ -175,11 +175,20 @@ class AteneaClient(Gtk.Window):
         for i, key in enumerate(keys):
             renderer = Gtk.CellRendererText()
             columna = Gtk.TreeViewColumn(key, renderer, text=i)
+            columna.set_cell_data_func(renderer, self.pinta_fila)
             self.treeview.append_column(columna)
             
         self.treeview.set_name("treeview")
         self.querybox.pack_start(self.treeview, True, True, 0)
         self.querybox.show_all()
+        
+    def pinta_fila(self, col, cell, model, iter, data):
+        idx = model.get_path(iter)[0]
+        if idx % 2 == 0:
+            cell.set_property("cell-background", "#0074D9")  # Azul claro    
+        else:
+            cell.set_property("cell-background", "#001f3f")  # Azul marino
+        
         
     # Actualizar etiqueta de login
     def update_loginlabel(self, text, color="red"):
