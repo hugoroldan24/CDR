@@ -30,45 +30,36 @@ class AteneaClient(Gtk.Window):
     
     def __init__(self):
         super().__init__(title="Client Atenea")
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_path("estilo.css")
-        Gtk.StyleContext.add_provider_for_screen(
-            dk.Screen.get_default(),
-            css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-        )
-        
-        self.server = "localhost"  # Cambiar por la IP del servidor
-        self.port = "8000"  # Cambiar por el puerto del servidor
+        self.editor_css = Gtk.CssProvider()
+        self.uid_thread = UIDReaderThread(self.process_uid)
         self.session = requests.Session() //Creamos la sesión
+       
+        self.server = "localhost"  # Cambiar por la IP del servidor
+        self.port = "8000"  # Cambiar por el puerto del servidor     
         
-        # Configuración de la ventana
+    def start_window(self):
+         # Configuración de la ventana
         self.set_border_width(10)
         self.set_default_size(400, 300)
         self.connect("destroy", self.on_destroy)
-
-        # Layout principal usando Stack
-        self.configure_stack()
-        
-        # Pantalla de login
-        self.login_screen()   
-        
-        # Pantalla de consulta
+       
+        self.configure_stack()      
+        self.login_screen()     
         self.query_screen()
+        self.configure_style_CSS()
         
-        # Iniciar hilo de lectura de UID
-        self.uid_thread = UIDReaderThread(self.process_uid)
         self.uid_thread.start()
-        # Mostrar la pantalla de login al inicio
-        self.stack.set_visible_child_name("login")
+        self.stack.set_visible_child_name("login")         # Mostrar la pantalla de login al inicio
         self.show_all()
         
+     # Layout principal usando Stack    
     def configure_stack(self):
         self.stack = Gtk.Stack()
         self.stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
         self.stack.set_transition_duration(300)
         self.add(self.stack)
         
+    # Pantalla de login   
     def login_screen(self):
         self.loginbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.stack.add_named(self.loginbox, "login")
@@ -79,6 +70,7 @@ class AteneaClient(Gtk.Window):
         self.loginlabel = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
         self.loginbox.pack_start(self.loginlabel, False, False, 0)
         
+     # Pantalla de consulta    
     def query_screen(self):
         self.querybox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
         self.stack.add_named(self.querybox, "query")
@@ -203,6 +195,12 @@ class AteneaClient(Gtk.Window):
         self.welcomelabel.set_text(f"Benvingut/da, {name}!")
         self.stack.set_visible_child_name("query")
 
+    def configure_style_CSS(self):                                           
+        self.editor_css.load_from_path("style.css")                                                              #Carreguem les regles d'estil CSS del fitxer estils.css
+        screen = Gdk.Screen.get_default()                                                                         #Obtenim una referència a la pantalla de la aplicació
+        Gtk.StyleContext.add_provider_for_screen(screen,self.editor_css,Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)  #Apliquem les regles CSS als widgets de la finestra.
+
+
 
 def http_get(session,url):
     try:
@@ -225,5 +223,6 @@ def http_get(session,url):
 
 if __name__ == "__main__":
     win = AteneaClient()
+    win.start_window()
     win.show_all()
     Gtk.main()
