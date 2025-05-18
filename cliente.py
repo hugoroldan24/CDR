@@ -62,24 +62,21 @@ class AteneaClient(Gtk.Window):
     # Pantalla de login   
     def login_screen(self):
         self.loginbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.loginbox.set_name("login_box")
         self.stack.add_named(self.loginbox, "login")
-        self.loginbox.set_margin_top(20)
-        self.loginbox.set_margin_bottom(20)
-        self.loginbox.set_margin_start(20)
-        self.loginbox.set_margin_end(20)
+        
         self.loginlabel = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
         self.loginbox.pack_start(self.loginlabel, False, False, 0)
         
      # Pantalla de consulta    
     def query_screen(self):
         self.querybox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+        self.loginbox.set_name("query_box")
         self.stack.add_named(self.querybox, "query")
-        self.querybox.set_margin_top(10)
-        self.querybox.set_margin_bottom(10)
-        self.querybox.set_margin_start(10)
-        self.querybox.set_margin_end(10)
+        
 
         self.welcomelabel = Gtk.Label(label="WELCOME")
+        self.welcomelabel.set_name("welcome_label")
         self.querybox.pack_start(self.welcomelabel, False, False, 0)
 
         self.query_entry = Gtk.Entry()
@@ -88,7 +85,7 @@ class AteneaClient(Gtk.Window):
         self.querybox.pack_start(self.query_entry, False, False, 0)
 
         self.logout_button = Gtk.Button(label="Logout")
-        self.logout_button.connect("clicked", self.intermediario)
+        self.logout_button.connect("clicked", self.on_logout)
         self.querybox.pack_start(self.logout_button, False, False, 0)
     
     # Procesar el UID recibido
@@ -159,7 +156,7 @@ class AteneaClient(Gtk.Window):
 
     # Crear tabla con resultados
     def create_table(self, json_array):
-        if not json_array:
+       if not json_array:
             print("No data")
             return
        if getattr(self, "treeview", None):
@@ -173,10 +170,13 @@ class AteneaClient(Gtk.Window):
             fila = [str(item.get(key, "-")) for key in keys]
             self.list.append(fila)
         self.treeview = Gtk.TreeView(model=self.list)
+       
         for i, key in enumerate(keys):
             renderer = Gtk.CellRendererText()
             columna = Gtk.TreeViewColumn(key, renderer, text=i)
             self.treeview.append_column(columna)
+            
+        self.treeview.set_name("treeview")
         self.querybox.pack_start(self.treeview, True, True, 0)
         self.querybox.show_all()
         
