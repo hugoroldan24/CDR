@@ -97,8 +97,7 @@ class AteneaClient(Gtk.Window):
         if data:
             name = data.get("data", "Desconocido")
             self.update_welcome_screen(name)
-            # Si quieres mostrarlo también en el LCD
-            # self.mostrar_lcd(name)
+            self.mostrar_lcd(name)
         else:
             self.update_loginlabel("Usuario no encontrado", "red")
 
