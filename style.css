@@ -6,7 +6,9 @@
      margin-bottom: 20px;
 }
 #login_label{
-
+     font-size: 20px;
+     color: #0074D9;
+     margin_top: 50px;
 }
 #query_box{
      margin-left: 10px;                       
