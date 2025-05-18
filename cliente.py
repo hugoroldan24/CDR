@@ -124,9 +124,10 @@ class AteneaClient(Gtk.Window):
         self.stack.set_visible_child_name("login")      
         self.query_entry.set_text("")
         self.loginlabel.set_text("Please login with your university card")
-        self.treeview.destroy()
-        self.treeview = None  # Eliminamos la referencia
-
+        if getattr(self, "treeview", None):
+            self.treeview.destroy()
+            self.treeview = None
+        
     # Cuando se envía una consulta
     def on_query(self, widget):     
         table = self.query_entry.get_text().strip()
