@@ -145,7 +145,7 @@ class AteneaClient(Gtk.Window):
     def do_query(self, url):
         raw = http_get(self.session,url) 
         if (raw.get("status",[]) == 'expired'):{
-            self.on_logout();
+            self.on_logout()
             return
         }
         if raw:
