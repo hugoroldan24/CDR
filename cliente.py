@@ -187,7 +187,7 @@ class AteneaClient(Gtk.Window):
         if idx % 2 == 0:
             cell.set_property("cell-background", "#0074D9")  # Azul claro    
         else:
-            cell.set_property("cell-background", "#001f3f")  # Azul marino
+            cell.set_property("cell-background", "#96FFFC")  # Azul marino
         
         
     # Actualizar etiqueta de login
