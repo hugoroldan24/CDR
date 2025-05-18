@@ -18,14 +18,6 @@
 }
 /* Estilo del TreeView */
 
-#treeview header {
-    backgroud-color: #0049C2;
-    color: #EDD11F;
-}
-
-
-
-
 /* Estilo de etiquetas de bienvenida/login */
 #welcome_label {
     font-weight: bold;
