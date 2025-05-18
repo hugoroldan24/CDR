@@ -24,6 +24,10 @@
     color: #0074D9;
 }
 #logout_button{
-     
+    background-color: #FF5959;  
+    color: black;                  
+    padding: 5px;                  
+    border-radius: 10px;
+    border: 2px dotted red;
 }
 
