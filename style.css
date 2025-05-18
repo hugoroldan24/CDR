@@ -3,21 +3,39 @@
     font-family: "Arial";
     font-size: 14px;
 }
-
+#login_box{
+     margin-left: 20px;                       
+     margin-right: 20px;                      
+     margin-top: 20px; 
+     margin-bottom: 20px;
+}
+#query_box{
+     margin-left: 10px;                       
+     margin-right: 10px;                      
+     margin-top: 10px; 
+     margin-bottom: 10px;
+}
 /* Estilo del TreeView */
-treeview {
-    background-color: #001f3f;  /* Azul marino */
-    color: white;
-    border: none;
+
+#treeview header {
+    backgroud-color: #0049C2;
+    color: #EDD11F;
 }
 
-/* Alternancia de colores: necesitas lógica adicional para hacerlo desde CSS */
-treeview row:nth-child(even) {
-    background-color: #0074D9;  /* Azul claro */
+#treeview row:nth-child(even) {
+    background-color: #0074D9; /*Azul claro*/
+    color: black;
 }
+
+#treeview row:nth-child(odd) {
+    background-color: #001f3f; /*Azul marino*/
+    color: black;
+}
+
+
 
 /* Estilo de etiquetas de bienvenida/login */
-label#welcome-label {
+#welcome_label {
     font-weight: bold;
     font-size: 16px;
     color: #0074D9;
