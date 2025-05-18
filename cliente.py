@@ -144,10 +144,10 @@ class AteneaClient(Gtk.Window):
     # Ejecutar la consulta
     def do_query(self, url):
         raw = http_get(self.session,url) 
-        if (raw.get("status",[]) == 'expired'):{
+        if (raw.get("status",[]) == 'expired'):
             self.on_logout()
             return
-        }
+        
         if raw:
             GLib.idle_add(self.create_table, raw.get("data",[])) //Le pasamos por parametros una lista de diccionarios
         else:
