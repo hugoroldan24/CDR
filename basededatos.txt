@@ -1,6 +1,6 @@
-sudo apt install mysql-server
 sudo apt install mariadb-server
-sudo apt install php,
+sudo apt install php
+sudo apt install php-mysqli
 
 sudo mariadb
 CREATE DATABASE Afrodita;
