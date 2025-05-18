@@ -66,6 +66,7 @@ class AteneaClient(Gtk.Window):
         self.stack.add_named(self.loginbox, "login")
         
         self.loginlabel = Gtk.Label(label="PLEASE, LOGIN WITH YOUR UNIVERSITY CARD")
+        self.loginlabel.set_name("login_label")
         self.loginbox.pack_start(self.loginlabel, False, False, 0)
         
      # Pantalla de consulta    
