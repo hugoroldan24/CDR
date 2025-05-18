@@ -3,7 +3,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib, Pango
 import threading
 import time
-#import lcddriver
+import lcddriver
 import json
 import requests
 from librerias import puzzle_1
@@ -114,13 +114,13 @@ class AteneaClient(Gtk.Window):
             self.update_loginlabel("Usuario no encontrado", "red")
 
     # Mostrar nombre en el LCD
-    #def mostrar_lcd(self, name):
-     #   lcd = lcddriver.lcd()
-      #  lcd.lcd_clear()
-      #  message = f"Benvingut {name}"
-      #  lines = message.split("\n")
-       # for i, line in enumerate(lines[:4]):
-      #      lcd.lcd_display_string(line[:20], i + 1)
+    def mostrar_lcd(self, name):
+        lcd = lcddriver.lcd()
+        lcd.lcd_clear()
+        message = f"Benvingut {name}"
+        lines = message.split("\n")
+        for i, line in enumerate(lines[:4]):
+            lcd.lcd_display_string(line[:20], i + 1)
 
     # Cuando se destruye la ventana
     def on_destroy(self, widget):
