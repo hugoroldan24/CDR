@@ -23,15 +23,6 @@
     color: #EDD11F;
 }
 
-#treeview row:nth-child(even) {
-    background-color: #0074D9; /*Azul claro*/
-    color: black;
-}
-
-#treeview row:nth-child(odd) {
-    background-color: #001f3f; /*Azul marino*/
-    color: black;
-}
 
 
 
