@@ -42,7 +42,7 @@ function buildQueryUrl(query) {
   let constraints;
   switch (query) {
     case "marks": constraints = ""; break;
-    case "timetables": constraints = "day=now&hour[gt]=now"; break;
+    case "timetables": constraints = "day=now&hour[lt]=now"; break;
     case "tasks": constraints = "date[gte]=now"; break;
     default: constraints = null; // Invalid table
    }
