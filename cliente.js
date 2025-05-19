@@ -42,7 +42,9 @@ function updateSentQuery(response){
    error_query.classList.add('hidden');
    if (response.status === 'valid_query'){
      const data = response.data;
-     
+        
+     const error_query = document.getElementById('query-message'); //elimina el misatge de query inválida
+     error_query.classList.add('hidden');
      
      container.innerHTML = ''; //Esto borrara la tabla anterior
      
