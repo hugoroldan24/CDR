@@ -1,6 +1,7 @@
 body { /*BODY = TODO EL CONTENIDO QUE ESTÁ DENTRO DE BODY EN EL CÓDIGO HTML DEL CLIENTE*/
   height: 100vh;
-  background: aquamarine;
+  background-image: url("foto-login.jpg");
+  background-size: cover; 
   display: flex; /*CREA EL CONTENIDO (UNA CAJA)*/
   justify-content: center; /* ESTO PONE EL CONTENDIO EN EL CENTRO (X)*/
   align-items: center;     /* ESTO LIMITA LO LARGO QUE ES EL CONTENDIO (Y) */
@@ -31,4 +32,73 @@ body { /*BODY = TODO EL CONTENIDO QUE ESTÁ DENTRO DE BODY EN EL CÓDIGO HTML DE
 
 .hidden{
   display: none;
+
+}
+
+#login-message { /*SELECIONAMOS EL MENSAJE SI HEMOS ESCRITO MAL EL LOGIN*/
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f44336; /* Rojo */
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+.welcome-box {
+  background-color: #e0e0e0; /* Gris claro */
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+.escribe-tu-query{
+  background-color: #e0e0e0; /* Gris claro */
+  padding: 20px;
+  border-radius: 5px;
+}
+
+#query-message { /*SELECIONAMOS EL MENSAJE SI HEMOS ESCRITO MAL LA QUERY*/
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #f44336; /* Rojo */
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ocultar por defecto */
+.hidden {
+  display: none;
+}
+
+/* Cambia el fondo de la tabla */
+table {
+  background-color: #87CEEB; /* Azul celeste */
+  border-collapse: collapse;
+  width: 60%;
+  margin: 20px auto;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+  border-radius: 8px;
+}
+
+/* Encabezados de la tabla */
+th {
+  background-color: #5DADE2; /* Azul celeste más oscuro */
+  color: white;
+  padding: 12px;
+  text-align: left;
+}
+
+/* Filas de la tabla */
+td {
+  background-color: #B0E0E6; /* Azul pálido más claro */
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Hover sobre filas */
+tr:hover td {
+  background-color: #ADD8E6; /* Azul ligeramente más oscuro al pasar el mouse */
 }
