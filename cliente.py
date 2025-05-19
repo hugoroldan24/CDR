@@ -96,7 +96,7 @@ class AteneaClient(Gtk.Window):
         url = f"http://{self.server}:{self.port}/Servidor/login.php?id={uid}"
         data = http_get(self.session,url)
 
-        if data:
+        if data.get("status","") == 'id_matched':
             name = data.get("data", "Desconocido")
             self.update_welcome_screen(name)
             self.mostrar_lcd(name)
